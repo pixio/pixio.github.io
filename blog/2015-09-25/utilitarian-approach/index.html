@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; Utilitarian Approach</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-09-25/utilitarian-approach/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; Utilitarian Approach</h1>
+    <p class="post-meta">
+      Daniel Blakemore • <span class="date">Sep 25, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <h2 id="tools-are-what-makes-humans-great">Tools are what makes humans great</h2>
+
+<p>And, you know, our complex and extremely adaptive brains, dexterous hands, and the invention of bacon.  But tools are synonymous with engineering.  We build them, we break them, we use them and improve them.  I think I write as many tools as I do any other kind of software, if not more.  They aren&#39;t complex masterpieces or incredibly detailed feats of mental ability; they are small, simple, dedicated snippets of functionality that make the complex masterpieces easier to build.</p>
+
+<h2 id="pxutilities"><a href="https://github.com/pixio/PXUtilities">PXUtilities</a></h2>
+
+<p>The first entry in today&#39;s post is a toolbox we use to hold a bunch of essentially unrelated functionality that we find useful.  A few of these are worth going into detail about, but first a list of our cast:</p>
+
+<ul>
+<li><code>NSArray+Map</code>: a lovely, simple method on <code>NSArray</code> that allows you to map and filter with a single block.  This is the way you&#39;ve always wanted to work with arrays.</li>
+<li><code>NSData+JSON</code>: converts an <code>NSData</code> containing JSON to an array or dictionary object.</li>
+<li><code>NSString+JSON</code>: converts an <code>NSString</code> containing JSON to an array or dictionary object. (you wouldn&#39;t guess it, but I wrote this one at the same time as the previous one)</li>
+<li><code>NSString+MD5</code>: calculates the MD5 hash of a given string and returns it as a string.</li>
+<li><code>PXAsyncUtilities</code>: two class functions that allow you to fire off a bunch of async tasks operating on an array and wait for them all to complete.</li>
+<li><code>PXGeocodingManager</code>: a class that lets you request a bunch of geocoding operations at once and not get blocked by Apple.</li>
+<li><code>PXUtilities</code>: several miscellaneous functions that didn&#39;t fit anywhere else.</li>
+</ul>
+
+<h3 id="nsarray-map">NSArray+Map</h3>
+
+<p>The late <a href="https://github.com/cobbal">Andrew Cobb</a> (not dead, but getting a Ph.D.) loves functional programming. As a token of his love, he birthed into the Objective-C ecosystem a simple, elegant, functional approach to manipulating <code>NSArray</code>.  Then he left our company to pursue even higher learning.  The years in between were an exciting time of high adventure, but that&#39;s another set of stories for another set of days.</p>
+
+<p>This category lets you take one array, mess around with it, and generate another array that contains the result of mapping your block over the array and filtering out the things your block said to filter out.  It really is an indispensable tool.</p>
+
+<h3 id="pxasyncutilities">PXAsyncUtilities</h3>
+
+<p>Have you ever wanted to just download a bunch of things from a server that doesn&#39;t support batch operations?  Or load a bunch of files from disk without freezing the UI or tangling with locking?  If you answer is no, you should be doing more interesting projects.  If your answer is yes, then do I have the tool for you. </p>
+
+<p><code>PXAsyncUtilities</code> comes in two flavors: download and operation.  </p>
+
+<p>Download takes a list of <code>id</code>s and a block to translate (presumably by downloading) each <code>id</code> into another object. When all the downloads finish (or fail), a final block is called with the list of downloaded objects and the list of the original objects in the order that the downloads completed (failed objects are removed so the mapping is valid).</p>
+
+<p>Operation takes a list and a block to process that list, but only cares if the operation succeeded or failed, whatever it was.  Then it provides to the completion a list of the objects that succeeded and a list of those that failed.</p>
+
+<p>And just like that, you can treat your networking code and batch operations like a functional map and filter.  No blocking.  No locking.  No problem.</p>
+
+<h3 id="pxgeocodingmanager">PXGeocodingManager</h3>
+
+<p>If you&#39;ve done geocoding with Apple&#39;s servers, you probably know that they are a bit touchy about lots of requests.  But sometimes you have lots of requests.  This class lets you make all those requests and then tells you when each one completes.  But the trick is, it doesn&#39;t flood the sensitive servers and more of your requests get to succeed as a result.  It&#39;s pretty simple and it&#39;s easy to use.  </p>
+
+<h2 id="uicolor-betterequality"><a href="https://github.com/pixio/UIColor-BetterEquality">UIColor+BetterEquality</a></h2>
+
+<p>Because float.</p>
+
+<p>This one may seem a little odd, but I promise it makes sense.  I was working on a project that had the user select a color to associate with an object outside the app.  Since the object exists outside the app, the color must persist between launches.  To my relief (as a lazy person), <code>UIColor</code> implements <code>NSCoding</code>. So I thought to myself, &quot;Wow, I don&#39;t have to think now.&quot;  Wrong.</p>
+
+<p>Another one of the constraints of this color association was that no two objects could be assigned the same color so colors already chosen could not be chosen again for new objects.  Trouble is, when I compared the color I saved with the list of colors the user could pick from, it didn&#39;t match.  I could choose blue and then the next time the app was launched, it would allow me to choose blue again.  Frustrating.</p>
+
+<p>I finally nailed it down to UIColor not serializing the color components in a way that produced the same float upon deserialization; that&#39;s reasonable because floats are imprecise and you probably shouldn&#39;t expect robustness when comparing for equality anyway(not without more information, at least).  </p>
+
+<p>So I replaced the <code>-isEqual</code> method on UIColor with one that makes a reasonable comparison: using an epsilon (like any person who wants to remain sane).  The epsilon is 0.5/255 so the color channels need only be equal to the precision of 24 bit color.  </p>
+
+<p>BOOM!</p>
+
+<p>Suddenly, the app remembered what colors had been used before and sanity was restored.  So please, if you want to restore sanity to your color comparisons, look no further than <code>UIColor+BetterEquality</code></p>
+
+<h2 id="control-issues">Control issues</h2>
+
+<p>In the next issue, I&#39;ll be revealing a bunch of controls that are pretty awesome. We may also hear from Spencer again soon if he has the time. </p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on my shoulders.  The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote almost every example project for all the CococaPods that have been and will be released.  <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods and classes he wrote himself.  Others, like <a href="https://github.com/sphippen">Spencer Phippen</a> and <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

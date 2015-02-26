@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>A Nibble of Gradle Flavors</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-08-05/a-nibble-of-gradle-flavors/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Nibble of Gradle Flavors</h1>
+    <p class="post-meta">
+      Calvin Kern • <span class="date">Aug 5, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>In Android Studio, <a href="https://developer.android.com/studio/build/index.html">Gradle</a> is used as a build tool with the <a href="https://developer.android.com/studio/releases/gradle-plugin.html">Android plugin</a> to configure your project and create an APK. Though most developers use Gradle to build their project, many of them don&#39;t take full advantage of Gradle scripts. One of the most common use cases is creating different <a href="http://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.ProductFlavor.html">product flavors</a> for their app. Flavors essentially let you build different versions of your app using a single code base.</p>
+
+<p>While there are a lot of very simple apps that don&#39;t really need different flavors, many developers use the <strong>Demo</strong>/<strong>Paid</strong> paradigm to monetize their applications. Another common useful case is when you have a production server and a staging server, flavors can you help you make apps to use the corresponding server. There&#39;s many reasons why a flavor would be nice or necessary, let&#39;s dive in a little deeper at how easy it is to accomplish this.</p>
+
+<h3 id="which-flavor-is-right-for-you">Which Flavor is right for you?</h3>
+
+<p>To start off, open the <code>build.gradle</code> for the <em>module</em> of your Android project (not the <code>build.gradle</code> for the <em>project</em>). It should look similar to:</p>
+<div class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">'com.android.application'</span>
+
+<span class="n">android</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="n">defaultConfig</span> <span class="o">{</span>
+        <span class="n">applicationId</span> <span class="s2">"com.pixio.awesomeapp"</span>
+        <span class="o">...</span>
+        <span class="n">versionCode</span> <span class="mi">1</span>
+        <span class="n">versionName</span> <span class="s2">"1.0"</span>
+    <span class="o">}</span>
+    <span class="n">buildTypes</span> <span class="o">{</span>
+        <span class="o">...</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="o">...</span>
+</code></pre></div>
+<p>By adding just a few lines, we can have different flavors.</p>
+<div class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">android</span> <span class="o">{</span>
+    <span class="o">...</span>
+    <span class="n">productFlavors</span> <span class="o">{</span>
+        <span class="n">free</span> <span class="o">{</span>
+            <span class="n">applicationId</span> <span class="s1">'com.pixio.awesomeapp.free'</span>
+            <span class="n">resValue</span> <span class="s2">"string"</span><span class="o">,</span> <span class="s2">"app_name"</span><span class="o">,</span> <span class="s2">"Awesome App (FREE)"</span>
+        <span class="o">}</span>
+        <span class="n">paid</span> <span class="o">{</span>
+            <span class="n">applicationId</span> <span class="s1">'com.pixio.awesomeapp.paid'</span>
+            <span class="n">resValue</span> <span class="s2">"string"</span><span class="o">,</span> <span class="s2">"app_name"</span><span class="o">,</span> <span class="s2">"Awesome app+"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Simple and easy. As shown above, I have overwritten the name of the app and the application id depending on which flavor is built (<code>app_name</code> is the default field to store the name of the app displayed to the user). Anything that is defined in <code>defaultConfig</code> can be overridden by any/all flavors to further customize the different apps. To actually make use of these newly defined flavors, we need to <strong>sync our project with gradle files</strong> (<em>Tools</em> -&gt; <em>Android</em> -&gt; <em>Sync project with gradle files</em>).</p>
+
+<p>Well now we have our flavors declared, how do we build them? In Android Studio, open the <strong>Build Variants</strong> window (<em>View</em> -&gt; <em>Tool Windows</em> -&gt; <em>Build Variants</em>). If you have synced with gradle, you should now see a window that shows which module you are working with and which <a href="https://developer.android.com/studio/build/build-variants.html">Build Variant</a> you&#39;re working with. If you click on the <em>Build Variant</em> box, a dropdown will appear letting you pick the <code>Debug</code> and <code>Release</code> build types of your defined flavors. These build types can each be combined with each flavor to determine which keystore will be used when signing your apk during the build process. Generally, you&#39;ll want to work with the <code>Debug</code> variant when developing and the <code>Release</code> variant when building an APK for beta testing and the Play Store.</p>
+
+<h3 id="build-config">Build Config</h3>
+
+<p>With the different flavors now set up, we can customize the app&#39;s behavior even further by adding new [build config fields][build-config]. These fields are added in the same <code>build.gradle</code> that we&#39;ve been working in, and can be added to flavors as well as build types. We can define unique values by adding lines like the following to any flavor:</p>
+<div class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">buildConfigField</span> <span class="s1">'String'</span><span class="o">,</span> <span class="s1">'HOST'</span><span class="o">,</span> <span class="s1">'"staging.pixioserver.com"'</span>
+</code></pre></div>
+<p>With that specific example, we defined <code>BuildConfig.HOST</code> to have the value <code>&quot;staging.pixioserver.com</code>. This allows us to have a specific endpoint for our staging flavor app that is different from the release version, which points to some production endpoint. Then, by building our app in the corresponding <code>Staging</code> and <code>Production</code> versions, we get the server intended for that app.</p>
+
+<p>We can add any valid java type as a <code>buildConfigField</code> with any valid java variable name. This could be useful for defining specific flavors/variants that need to report bug crashes or to not allow certain features using boolean flags. For example, you can enable a feature that let’s you view server logs or debug data in certain debugging/client versions of the app.</p>
+
+<h3 id="that-39-s-a-gradle-wrap">That&#39;s A (Gradle) Wrap!</h3>
+
+<p>This was just a small touch of the power you can use when customizing your <code>build.gradle</code>. A sample of things you can do are set your project up to automatically sign the apk with a specified keystore, defining custom build procedures when compiling the project, or even modifying the apk after building to include the version number. Using these concepts we can define custom flavors to achieve multiple Android apps using the <em>same</em> codebase. By using flavors, we can specify special <code>buildConfigField</code> properties that further define the behavior of each app and let developers have more control over testing/paid/branded versions. With a little more work, you can actually have code separated into different <a href="https://developer.android.com/studio/build/build-variants.html#sourcesets">source sets</a> that allow you to control the flow of your app with finer control by executing code blocks for corresponding flavors.</p>
+
+<p>[build-config]: <http://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.ProductFlavor.html#com.android.build.gradle.internal.dsl.ProductFlavor:buildConfigField(java.lang.String, java.lang.String, java.lang.String)></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

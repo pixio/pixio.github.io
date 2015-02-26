@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>C in the 21st Century</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-06-03/c-in-the-21st-century/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">C in the 21st Century</h1>
+    <p class="post-meta">
+      Matt Stoker • <span class="date">Jun 3, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>I love <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C</a>. The language is small, fast, and elegant, being the prime choice for many <a href="https://www.opengl.org">time-tested libraries</a> in every corner of software development. It is one of the most portable languages that compiles to native executables. However, it lacks direct support for language features developers have come to depend on, particularly objects and closures. Developing software without the structure of objects is a foreign concept for the majority of developers. <a href="https://en.wikipedia.org/wiki/Functional_programming">Functional Programming</a> has made a resurgence with the addition of closures to popular languages like C++, C#, Java, and Swift, but these all still make the assumption that <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">Object Oriented Programming</a> techniques are also available. So how can C be used to do clear, effort efficient, and even gasp FUN software development?</p>
+
+<h2 id="c-can-be-object-oriented">C Can Be Object Oriented</h2>
+
+<p>Contrary to popular belief, C is actually an OOP-friendly language. Using its structure definitions, and functions that operate on them, we can make objects with data and methods. Header files can be used to separate private object interfaces from public ones. Type systems can even be created that have all the features that objects in OOP-native languages have. Getting objects set up in C does take more effort, but it is not as much as you may think.</p>
+
+<p>Let’s look at what is involved in making objects in C.</p>
+
+<h2 id="structs-and-functions">Structs and Functions</h2>
+
+<p>The defining characteristic of OOP is in how to think about the data in a program and how it is manipulated. Rather than thinking of the data as a sea of bytes and functions that swim in that sea, OOP organizes the data into a packet that is manipulated using a defined interface. This usually takes the form of classes and methods, with the data in the class being encapsulated. We can create the same structure in C by using a structure to store the object’s data and functions that take the struct as one of their parameters to form the interface. Let’s build a simple image object, starting with the header file. We’ll add an implementation file later.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/* image.h */</span>
+<span class="k">struct</span> <span class="n">image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">w</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">h</span><span class="p">;</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">pix</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">image</span><span class="o">*</span> <span class="n">img_make</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">fill_clr</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">img_dstry</span><span class="p">(</span><span class="k">struct</span> <span class="n">image</span><span class="o">*</span> <span class="n">img_ptr</span><span class="p">);</span>
+<span class="k">struct</span> <span class="n">image</span><span class="o">*</span> <span class="n">img_load</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file_path</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">img_get_pix</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">image</span><span class="o">*</span> <span class="n">img_ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">img_set_pix</span><span class="p">(</span><span class="k">struct</span> <span class="n">image</span><span class="o">*</span> <span class="n">img_ptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pix</span><span class="p">);</span>
+</code></pre></div>
+<p>I can hear the complaints from here. &quot;Gross!!! Look at all those *’s, tiny names with few vowels, blah_bleh junk, and struct and const words peppered everywhere. You can’t even guarantee int is 32-bits! This is why I use [language name] instead of C. I’m not doing my app development in this!&quot; Similar complaints can follow, and you’re right!</p>
+
+<h2 id="moving-beyond-traditional-c">Moving Beyond Traditional C</h2>
+
+<p>Code written in C does not have to follow the conventions established in the 70’s. Using better naming techniques alone makes the experience much better. Using Pascal Case and Camel Case improves readability. Realizing that we all use a text editor with code completion, we can also use longer names, eliminating the need for less-readable short names.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/* Image.h */</span>
+<span class="k">struct</span> <span class="n">Image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="kt">int</span><span class="o">*</span> <span class="n">pixels</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">int</span> <span class="n">fillColor</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageDestroy</span><span class="p">(</span><span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">);</span>
+<span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageLoad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageSetPixel</span><span class="p">(</span><span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pixel</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="the-taming-of-the-int">The Taming of the Int</h2>
+
+<p>The image object here stores pixel colors as integers. Because the range of an integer determines how many colors a pixel can take on in our image, we’d like to know what that is. The range of integer in a language is always a concern, but it is made worse in C because it is hardware and even compiler dependent.</p>
+
+<p>In order to solve this and other issues, <a href="https://en.wikipedia.org/wiki/C99">C99</a> was created. Among many other improvements, C99 defines fixed sizes for integer types and allows declarations of variables anywhere in a function body, instead of just at the beginning. C11, a 2011 standard with more wonderful additions, is gaining broad support in compilers. For now, let’s use C99 to fix the integer size issue for pixels in our image.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.h
+</span><span class="cp">#include &lt;stdint.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">Image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="kt">uint32_t</span><span class="o">*</span> <span class="n">pixels</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">fillColor</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageDestroy</span><span class="p">(</span><span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">);</span>
+<span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageLoad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">);</span>
+<span class="kt">uint32_t</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="k">const</span> <span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageSetPixel</span><span class="p">(</span><span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">uint32_t</span> <span class="n">pixel</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="types-types-types">Types, Types, Types</h2>
+
+<p>This 32-bit standard size integer will store exactly 32-bit pixels on any platform we compile the program for. It introduces an awkward <code>_t</code> to the type name, but we get the exact precision we wanted. The stdint.h header even defines limits for the different integer types, like <code>UINT32_MAX</code>.</p>
+
+<p>We don’t have to live with these names, though. Notice that width and height still use the int keyword, as we don’t have a specific need that the width and height have a particular range. The <code>uint32_t</code> is only being used for the exact precision we need for pixels. If we use the <code>typedef</code> keyword, we can rename <code>uint32_t</code> to <code>Pixel</code> and <code>struct Image</code> to just <code>Image</code>, making things here look even better.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.h
+</span><span class="cp">#include &lt;stdint.h&gt;
+</span>
+<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">Pixel</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">Image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">Pixel</span><span class="o">*</span> <span class="n">pixels</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Image</span> <span class="n">Image</span><span class="p">;</span>
+
+<span class="n">Image</span><span class="o">*</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">fillColor</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageDestroy</span><span class="p">(</span><span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">);</span>
+<span class="n">Image</span><span class="o">*</span> <span class="n">ImageLoad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">);</span>
+<span class="n">Pixel</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="k">const</span> <span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageSetPixel</span><span class="p">(</span><span class="n">Image</span><span class="o">*</span> <span class="n">imagePointer</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">pixel</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="opaque-types">Opaque Types</h2>
+
+<p>One feature that OOP languages support that we want in our C-based app is encapsulation. Encapsulation keeps the details of the way an object is made and manipulated separate from the interface others use to work with the object. In our example, the image width, height, and pixels in the image are directly accessible. We could change the width without allocating space for more pixels, leaving the object dangerously inconsistent state.</p>
+
+<p>In C, we can use the concept of an Opaque Type as a replacement for classes and gain encapsulation. An Opaque Type is a definition for a pointer to a struct, but the details of that struct are not made available to the user of the type. This lets us hide the implementation details away from the user of the type and allow them to think about how to use it, rather than how to manage its data. It takes the form of a typedef to a struct pointer and typically ends in <code>Ref</code>, meaning reference.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.h
+</span><span class="cp">#include &lt;stdint.h&gt;
+</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageRef</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">Pixel</span><span class="p">;</span>
+
+<span class="n">ImageRef</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">fillColor</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageDestroy</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">);</span>
+<span class="n">ImageRef</span> <span class="n">ImageLoad</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">);</span>
+<span class="n">Pixel</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageSetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">pixel</span><span class="p">);</span>
+
+<span class="c1">// Image_Internal.h
+</span><span class="cp">#include "Image.h"
+</span>
+<span class="k">struct</span> <span class="n">Image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">Pixel</span><span class="o">*</span> <span class="n">pixels</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Image</span> <span class="n">Image</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="in-recent-memory">In Recent Memory</h2>
+
+<p>Up to here we’ve ignored the topic of <a href="https://en.wikipedia.org/wiki/Memory_management">memory management</a>. In C, data must be placed either on the stack by declaring local variables within a scope, or on the heap using memory allocation functions like <code>malloc()</code> and <code>free()</code>. The <code>ImageCreate()</code> and <code>ImageDestroy()</code> methods, for example, would look something like this:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.c
+</span><span class="cp">#include "Image.h"
+#include "Image_Internal.h"
+#include &lt;stdlib.h&gt;
+</span>
+<span class="n">ImageRef</span> <span class="nf">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">fillColor</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ImageRef</span> <span class="n">image</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImageRef</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Image</span><span class="p">));</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span> <span class="o">=</span> <span class="p">(</span><span class="n">Pixel</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Pixel</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">ImageDestroy</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When the image is created using <code>ImageCreate()</code>, it will take up memory on the heap until it is freed using <code>ImageDestroy()</code>. This Create/Destroy mechanism is pretty straightforward. It’s not as easy to use as automatic memory management, but it gets the job done. What about <code>ImageLoad()</code> though? Does it need to be destroyed? Load/Destroy doesn’t have quite the symmetry of Create/Destroy, but it does need to be done. If it is not destroyed when we’re done with it, the associated memory leaks and is left unavailable for other uses. We must make this clear in documentation in the header.</p>
+
+<p>If we’re defining a set of objects that will work together, though, we can create a consistent set of names to better self-document what should be destroyed. Just changing the name of <code>ImageLoad()</code> to <code>ImageCreateByLoading()</code> allows us to establish a Create/Destroy pattern. So anything you get from a call to a function containing Create must be matched with a call to a Destroy function. Patterns like these assist in knowing what is required without forcing users to comb through the documentation.</p>
+
+<p>We can use other memory management mechanisms too, like <a href="https://en.wikipedia.org/wiki/Reference_counting">Reference Counting</a>, but that’s a topic for another day.</p>
+
+<h2 id="roll-your-own-or-core-foundation">Roll-Your-Own or Core Foundation</h2>
+
+<p>We’ve succeeded in creating an image type in C99 that is almost as easy to use as an image class built using an OOP-native language. The ease of use can be made even better, and can even be extended to provide other OOP features like introspection and polymorphism. Container types like sets, lists, and maps are also extremely handy and make using C objects easy. You can either write your own (not as bad as you might think), or use a library. Libraries having these have been implemented by many groups. One of the best is <a href="https://github.com/opensource-apple/CF">Core Foundation</a> by Apple Inc.</p>
+
+<p>Core Foundation was originally created during the Mac OS 9 to Mac OS X transition and packaged in the Carbon Framework. It has been open-sourced and contains container objects as well as many advanced objects built in much the way described here, using a reference counted memory model. It’s a large library, though, and may be providing more than you need. If you don’t find it perfect to form the basis for your shared app codebase, build your own! For a smooth ride, reinventing the wheel is better than using one that is <a href="http://www.discovery.com/tv-shows/mythbusters/videos/square-wheels/">the wrong shape</a>.</p>
+
+<h2 id="bringing-it-all-together">Bringing it All Together</h2>
+
+<p>There are 3 files to define the Image opaque type. The header file Image.h contains the opaque type definition and the public functions defined on that type. The private header Image-Internal.h defines the type&#39;s structure and private function interface. The implementation file Image.c defines how the object performs its actions. You can compile Image.c using a variety of tools, and can even distribute the compiled Image object code (Image.o or Image.a) and the public header without the private header for use in other projects. I&#39;ve also provided a simple main method to show how the type is used.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// main.c
+</span><span class="cp">#include "Image.h"
+#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">ImageRef</span> <span class="n">image</span> <span class="o">=</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mh">0xFF00FF00</span><span class="p">);</span>
+    <span class="n">Pixel</span> <span class="n">pixel</span> <span class="o">=</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Pixel (10,10): %i"</span><span class="p">,</span> <span class="n">pixel</span><span class="p">);</span>
+
+    <span class="n">ImageSetPixel</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mh">0x00000000</span><span class="p">);</span>
+    <span class="n">pixel</span> <span class="o">=</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Pixel (10,10): %i"</span><span class="p">,</span> <span class="n">pixel</span><span class="p">);</span>
+
+    <span class="n">ImageDestroy</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.h
+</span><span class="cp">#include &lt;stdint.h&gt;
+</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Image</span><span class="o">*</span> <span class="n">ImageRef</span><span class="p">;</span>
+<span class="k">typedef</span> <span class="kt">uint32_t</span> <span class="n">Pixel</span><span class="p">;</span>
+
+<span class="n">ImageRef</span> <span class="n">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">fillColor</span><span class="p">);</span>
+<span class="n">ImageRef</span> <span class="n">ImageCreateByLoading</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageDestroy</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">);</span>
+<span class="n">Pixel</span> <span class="n">ImageGetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">ImageSetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">pixel</span><span class="p">);</span>
+
+<span class="c1">// Image_Internal.h
+</span><span class="cp">#include "Image.h"
+</span>
+<span class="k">struct</span> <span class="n">Image</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">Pixel</span><span class="o">*</span> <span class="n">pixels</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Image</span> <span class="n">Image</span><span class="p">;</span>
+</code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Image.c
+</span><span class="cp">#include "Image.h"
+#include "Image_Internal.h"
+#include &lt;stdlib.h&gt;
+</span>
+<span class="n">ImageRef</span> <span class="nf">ImageCreate</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">,</span> <span class="kt">int</span> <span class="n">height</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">fillColor</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ImageRef</span> <span class="n">image</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImageRef</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Image</span><span class="p">));</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span><span class="p">;</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span><span class="p">;</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span> <span class="o">=</span> <span class="p">(</span><span class="n">Pixel</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Pixel</span><span class="p">)</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">height</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">fillColor</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">image</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ImageRef</span> <span class="nf">ImageCreateByLoading</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">filePath</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// TODO: Load image (see later post!)
+</span>    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">ImageDestroy</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">image</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">Pixel</span> <span class="nf">ImageGetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">+</span> <span class="n">x</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">ImageSetPixel</span><span class="p">(</span><span class="n">ImageRef</span> <span class="n">image</span><span class="p">,</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="n">Pixel</span> <span class="n">pixel</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">image</span><span class="o">-&gt;</span><span class="n">pixels</span><span class="p">[</span><span class="n">y</span> <span class="o">*</span> <span class="n">image</span><span class="o">-&gt;</span><span class="n">width</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="relevance-to-android-and-ios">Relevance to Android and iOS</h2>
+
+<p>That is object oriented C in a nutshell. There are many ways to go further, adding type systems, polymorphism, introspection, and other features. I hope you enjoy building out beautiful, powerful, portable systems using these techniques.</p>
+
+<p>So where do we use C in the 21st Century? If you&#39;re writing new code, more likely than not, you&#39;ll find yourself writing code that interacts with mobile or doing mobile application development directly.</p>
+
+<p>When planning a mobile application that runs on both iOS and Android devices, the development options fall into 3 groups: 1. cross-platform frameworks like Xamarin, 2. native development with two separate codebases, and 3. front-end development for each platform with a shared back-end codebase. The best choice depends heavily on the application being built.</p>
+
+<p>When your app requirements match best with option #3, a partially shared codebase, a language and tools that generate binaries on both platforms is required. Since Java, the Android favorite, doesn&#39;t run on iOS, and Swift, the Apple favorite, doesn&#39;t run on Android, we have to find something that does. It is possible to tie into code written in C and C++ on Android by making use of the <a href="https://developer.android.com/ndk/index.html">Native Development Kit</a> and on iOS applications written in Swift with the <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/InteractingWithCAPIs.html#//apple_ref/doc/uid/TP40014216-CH8-ID17">Swift Foreign Function Interface</a>. This allows developers, by enduring significant pain, to use libraries that run on both platforms.</p>
+
+<p>Though the Swift FFI supports C++, it does so rather poorly. <a href="https://github.com/apple/swift-evolution/tree/b55ce1513f1eef80fb780759326d8efb62cec04d">Swift Programming Language Evolution</a> states “C++ itself is a very complex language, and providing good interoperability with C++ is a significant undertaking that is out of scope for Swift 3.0.” Current wisdom advocates <a href="https://en.wikipedia.org/wiki/Wrapper_library">wrapping</a> C++ in C or Objective-C, then using the Swift FFI to bring that in. Building new interoperable code with iOS and Android with poor FFI support and wrapping makes C++ a tenuous proposition.</p>
+
+<p>Other options such as <a href="http://j2objc.org/">Google’s j2objc</a> exist, but usually require many tradeoffs in code structure. Using these techniques to build opaque types in native C keeps writing new shared mobile codebases from becoming contorted pipe dream.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

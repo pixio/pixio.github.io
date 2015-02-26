@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Now You're Thinking With Stack Views</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-12-16/stackview-tester/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Now You're Thinking With Stack Views</h1>
+    <p class="post-meta">
+      Kevin Wong • <span class="date">Dec 16, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p><code>UIStackView</code> was introduced in at WWDC 2015 in June. It&#39;s a fantastic container view that easily manages a most common layout types. Unfortunately, <code>UIStackView</code> is only supported on iOS 9. Supporting older users can be difficult, but some enterprising developers have stepped up to backport the functionality of <code>UIStackView</code>.</p>
+
+<table><thead>
+<tr>
+<th>Library</th>
+<th>Language</th>
+<th>Version</th>
+<th>Stars</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><a href="https://github.com/oarrabi/OAStackView">OAStackView</a></td>
+<td>Objective-C</td>
+<td>iOS7+</td>
+<td><iframe src="https://ghbtns.com/github-btn.html?user=oarrabi&repo=OAStackView&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></td>
+</tr>
+<tr>
+<td><a href="https://github.com/tomvanzummeren/TZStackView">TZStackView</a></td>
+<td>Swift</td>
+<td>iOS7+</td>
+<td><iframe src="https://ghbtns.com/github-btn.html?user=tomvanzummeren&repo=TZStackView&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></td>
+</tr>
+<tr>
+<td><a href="https://github.com/forkingdog/FDStackView">FDStackView</a></td>
+<td>Objective-C</td>
+<td>iOS6+</td>
+<td><iframe src="https://ghbtns.com/github-btn.html?user=forkingdog&repo=FDStackView&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe></td>
+</tr>
+</tbody></table>
+
+<p>There are some important distinctions between these libraries. <code>OAStackView</code> and <code>TZStackView</code> are the oldest two libraries while <code>FDStackView</code> is relatively new. <code>TZStackView</code> is written in Swift while the other two are written in Objective-C. <code>TZStackView</code> doesn&#39;t support Interface Builder while the other two do.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>These three libraries aim to mimic the functionality of the built-in <code>UIStackView</code>. The authors of these libraries employ several methods of ensuring compatability.</p>
+
+<p><code>OAStackView</code> deconstructs the parameters that can be set on a <code>UIStackView</code>. Based on these parameters, the frames of arranged subviews can be calculated. Then, test cases are created asserting that the arranged subview frames match what was calculated by hand.</p>
+
+<p><code>TZStackView</code> runs tests based entirely on the constraints. The library aims to mimic the exact functionality of <code>UIStackView</code> by matching the exact constraints added. By setting up the state of a <code>UIStackView</code> and a <code>TZStackView</code> simultaneously, the actual <code>NSLayoutConstraint</code> objects can be compared to ensure that constraints match between the two classes.</p>
+
+<p><code>FDStackView</code> doesn&#39;t use any test cases. Instead, it appears that testing occurs visually through manual examination of the demo application.</p>
+
+<h2 id="ensuring-compatability">Ensuring Compatability</h2>
+
+<p>In the end, the goal of all three libraries is to mimic the functionality of an existing class. It doesn&#39;t matter so much how each is implemented, but they should all look the same. The visual representation of the stack views can be tested in two ways.</p>
+
+<h3 id="frame-testing">Frame Testing</h3>
+
+<p>Frame testing is rather simple. Setup the state of two stack views and compare the frames of each stack view as well as each of their <code>arrangedSubviews</code>. This ensures that both stack views are the same size and each arranged subview will be placed within the stack view at the same position. Unfortunately, this does not account for subviews that are hidden or outside of the view&#39;s bounds.</p>
+
+<p>Constraint testing is a higher level test as constraints are used to generate the resulting frames. However, differing constraints could potentially produce the exact same results.</p>
+
+<h3 id="snapshot-testing">Snapshot Testing</h3>
+
+<p>Even simpler in concept than frame testing is snapshot testing. Because all three classes are attempting to mimic functionality, they should all look and perform the same. By setting up each stack view in the same manner and comparing snapshot images, we can abstract away implementation details and compare what we really care about most: how each view looks in the end.</p>
+
+<h2 id="stackviewtester"><a href="https://github.com/kwongius/StackViewTester">StackViewTester</a></h2>
+
+<p>In choosing a library for an application which needed iOS 8 support, I wrote some test cases to compare implementations of the three stack view clones. Test cases setup the stack view states independently and compares snapshots. Snapshots are saved to disk and a simple HTML page can be generated to easily compare stack views.</p>
+
+<h2 id="compatability">Compatability</h2>
+
+<h3 id="missing-features">Missing Features</h3>
+
+<p>All three libraries attempt to mimic the functionality of the existing <code>UIStackView</code>. However, they do not necessarily present themselves to developers as perfect substitutes. One simple way of comparing them is by checking which methods these stack views do or do not implement.</p>
+
+<h4 id="oastackview">OAStackView</h4>
+
+<ul>
+<li><code>setBaselineRelativeArrangement:</code></li>
+<li><code>isBaselineRelativeArrangement</code></li>
+</ul>
+
+<h4 id="tzstackview">TZStackView</h4>
+
+<ul>
+<li><code>setBaselineRelativeArrangement:</code></li>
+<li><code>isBaselineRelativeArrangement</code></li>
+<li><code>isLayoutMarginsRelativeArrangement</code></li>
+</ul>
+
+<h4 id="fdstackview">FDStackView</h4>
+
+<ul>
+<li>None</li>
+</ul>
+
+<p><code>OAStackView</code> and <code>TZStackView</code> do not implement the <code>baselineRelativeArrangement</code>. Additionally, <code>TZStackView</code> does not respond to the <code>isLayoutMarginsRelativeArrangement</code> despite implementing the property. This is due to fact that <code>TZStackView</code> is written in Swift and the expected getter is not automatically generated.</p>
+
+<p>It is also worth noting that <code>TZStackView</code> implements all available alignments except for <code>.LastBaseline</code>.</p>
+
+<p><code>FDStackView</code> has perfect selector compatibility. Additionally, <code>FDStackView</code> will insert itself at runtime allowing you to use it as if it were a real <code>UIStackView</code>. This allows you to be using a real <code>UIStackView</code> for devices running iOS 9 and the compatiblity version for version pre-iOS 9. For someone reading your code, there would be no references to <code>FDStackView</code> asides from an import header.</p>
+
+<h3 id="snapshot-comparison">Snapshot Comparison</h3>
+
+<p>In order to cover all possible cases, all permutations of various parameters are generated and tested. These include the six layout properties: <code>alignment</code>, <code>axis</code>, <code>distribution</code>, <code>spacing</code>, <code>baselineRelativeArrangement</code>, and <code>layoutMarginsRelativeArrangement</code>. Additionally, permutations that test different view types, hidden views, and layout margins are generated and tested. All stack views are snapshotted and images compared with a snapshot of a real <code>UIStackView</code>.</p>
+
+<p>It is possible that permutations are generated that are invalid permutations. For example, baseline alignment is only valid when the axis is horizontal and the stack view matches it&#39;s intrinsic content height. All possible permutations (including the invalid ones) are generated.</p>
+
+<p>Views tested were composed of two groups. The first, dubbed &quot;simple views&quot;, are composed of 5 different <code>UIView</code> subclasses that return an <code>intrinsicContentSize</code>. The second adds some <code>UILabels</code> with various properties.</p>
+
+<table><thead>
+<tr>
+<th>Class</th>
+<th>Breakdown</th>
+<th>Percentage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>OAStackView</td>
+<td>2228/11520</td>
+<td>19.3%</td>
+</tr>
+<tr>
+<td>TZStackView</td>
+<td>3477/11520</td>
+<td>30.2%</td>
+</tr>
+<tr>
+<td>FDStackView</td>
+<td>2558/11520</td>
+<td>22.2%</td>
+</tr>
+</tbody></table>
+
+<p>If we then hide the invalid ones we get...</p>
+
+<table><thead>
+<tr>
+<th>Class</th>
+<th>Breakdown</th>
+<th>Percentage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>OAStackView</td>
+<td>1432/6080</td>
+<td>23.6%</td>
+</tr>
+<tr>
+<td>TZStackView</td>
+<td>2207/6080</td>
+<td>36.3%</td>
+</tr>
+<tr>
+<td>FDStackView</td>
+<td>1593/6080</td>
+<td>26.2%</td>
+</tr>
+</tbody></table>
+
+<p>We can also break it down by view type. Here we have compare simple views (including invalid)...</p>
+
+<table><thead>
+<tr>
+<th>Class</th>
+<th>Breakdown</th>
+<th>Percentage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>OAStackView</td>
+<td>1588/5760</td>
+<td>27.6%</td>
+</tr>
+<tr>
+<td>TZStackView</td>
+<td>2276/5760</td>
+<td>39.5%</td>
+</tr>
+<tr>
+<td>FDStackView</td>
+<td>1772/5760</td>
+<td>30.8%</td>
+</tr>
+</tbody></table>
+
+<p>and the views with labels...</p>
+
+<table><thead>
+<tr>
+<th>Class</th>
+<th>Breakdown</th>
+<th>Percentage</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>OAStackView</td>
+<td>640/5760</td>
+<td>11.1%</td>
+</tr>
+<tr>
+<td>TZStackView</td>
+<td>1201/5760</td>
+<td>20.9%</td>
+</tr>
+<tr>
+<td>FDStackView</td>
+<td>786/5760</td>
+<td>13.6%</td>
+</tr>
+</tbody></table>
+
+<p>So much data!</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>There&#39;s a lot of information here. Based on the raw numbers, <code>TZStackView</code> has the best compatibility with <code>UIStackView</code>. Unfortunately, it passed just barely over 50% of the test permutations. It is clear that none of these implementations are able to perfectly mimic a real <code>UIStackView</code>. We must take into account the testing methodology as well. The methodology employed here tests all possible permutations of parameters of which many are invalid. It is advisable to check out the <a href="http://kwongius.github.com/StackViewTester">UIStackView Comparison</a> and play with the filters to draw your own conclusions.</p>
+
+<p>Snapshot and frame testing are effective at determining if these stack views are fully layout compatible with the existing <code>UIStackView</code>. However, these methods don&#39;t test other compatibilites such as animations. It also doesn&#39;t necessesarily make it any easier to debug issues. Instead it simply highlights that there is an incompatibility.</p>
+
+<p><code>UIStackView</code> depends on <a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UILayoutGuide_Class_Reference/index.html">UILayoutGuide</a> for some configurations of the stack view. Unfortunately, <a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UILayoutGuide_Class_Reference/index.html">UILayoutGuide</a> is new to iOS 9. While this can be faked with a dummy view, the results are not perfect, as evidenced by the results.</p>
+
+<p>If you are looking for a library that is a perfect drop-in replacement for <code>UIStackView</code>, you will not find one that currently exists. There are too many nuances with each of these stack views that don&#39;t perfectly replicate a real <code>UIStackView</code>. All three stack views are implemented differently. Simply pick one that you like and use it. In the event that you drop support for pre-iOS 9 versions and decide to use <code>UIStackView</code>, you may need to adjust parameters with you stack view but this should not be a huge ordeal. The pain of working with a compatibility library may be worth it for the simplicty of the stack views.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; Messaging Utilities</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-09-11/messaging-utilities/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; Messaging Utilities</h1>
+    <p class="post-meta">
+      Spencer Phippen • <span class="date">Sep 11, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <h2 id="messaging">Messaging</h2>
+
+<p><em>Filling in for Daniel Blakemore this week and next is Spencer Phippen.</em></p>
+
+<p>Messaging is a fundamental but powerful concept that lies at the heart of the Objective-C runtime. Today&#39;s pods feature a few tools that let you bend the messaging system to give you atypical, but useful, behavior. Let&#39;s jump right in to the first one.</p>
+
+<div style="text-align:center"><img src="/img/posts/imp.jpg" width="350" title="Image by FastLizard4 [CC BY-SA 3.0] via Wikimedia Commons (https://commons.wikimedia.org/wiki/File%3AInterface_Message_Processor_Front_Panel.jpg)" /><br /><a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ObjCRuntimeRef/#//apple_ref/c/tag/IMP"><em>Hmm, <strong>I</strong>nterface <strong>M</strong>essage <strong>P</strong>rocessor, I-M-P, IMP... where have I seen that?</a></em></div>
+
+<h2 id="pxcoalescedrunner"><a href="https://github.com/pixio/PXCoalescedRunner">PXCoalescedRunner</a></h2>
+
+<p>This pod contains a single class: <code>PXCoalescedRunner</code>. It is a simple class, but it came into existence to solve a problem that we encountered (and re-solved) in our apps over and over again.</p>
+
+<p>In <strike>most</strike> all of the apps we write, the UI is powered by a model containing a bunch of data that changes over the life of the app. User clicks on a button, add some data to the model. User edits a text field, change a string in the model. And so on. Most of these changes should persist between invocations of the app, so we decide to save the data to disk every time one of these events occurs.</p>
+
+<p>Problem: If the user clicks a button 20 times in 2 seconds (some of our users are very anxious), we don&#39;t want to write our model data to disk 20 times in the same period.</p>
+
+<p>Solution: Whenever an action that <em>would</em> cause the model data to be saved to disk occurs, start a timer (for, say, 5 seconds) that executes the actual save when the timer completes. If another save-incurring action occurs before then, restart the timer. Now, the data is only written to disk once, 5 seconds after the last button click occurs.</p>
+
+<p>Problem: You end up rewriting this code in most apps you work on.</p>
+
+<p>Solution: Use <code>PXCoalescedRunner</code>, like this:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span> <span class="n">init</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="n">PXCoalescedRunner</span><span class="o">*</span> <span class="n">runner</span> <span class="o">=</span> <span class="p">[[</span><span class="n">PXCoalescedRunner</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithDelay</span><span class="p">:</span><span class="mi">5</span><span class="p">.</span><span class="mi">0</span> <span class="nf">target</span><span class="p">:</span><span class="n">self</span> <span class="n">action</span><span class="o">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">actuallySave</span><span class="p">)];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">saveIncurringAction</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">runner</span> <span class="nf">startTimer</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">actuallySave</span> <span class="p">{</span>
+  <span class="c1">// save your data
+</span>  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Also provided in the class are intializers that work with blocks and C functions, if that&#39;s more your style.</p>
+
+<h2 id="pxmultiforwarder"><a href="https://github.com/pixio/PXMultiForwarder">PXMultiForwarder</a></h2>
+
+<p>Like the above, this is a single-class pod: <code>PXMultiForwarder</code>. However, this class digs more deeply into the internals of the Objective-C runtime, which lets us do things that are a little bit more interesting.</p>
+
+<p><code>PXMultiForwarder</code> is designed to wrap any number of Objective-C objects (typically of the same type), then forward any messages it receives to the objects in question - if the message returns an object itself, it is invoked on each of the wrapped objects and another <code>PXMultiForwarder</code> is returned. See the following example:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@interface</span> <span class="nc">Foo</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span> <span class="nf">initWithNumber</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">number</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">Foo</span><span class="o">*</span><span class="p">)</span> <span class="n">next</span><span class="p">;</span> <span class="c1">// Returns a Foo with a one larger number
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="n">print</span><span class="p">;</span> <span class="c1">// NSLogs "Foo &lt;number&gt;"
+</span><span class="k">@end</span>
+<span class="p">...</span>
+<span class="n">Foo</span><span class="o">*</span> <span class="n">foo1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Foo</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithNumber</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">Foo</span><span class="o">*</span> <span class="n">foo2</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Foo</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithNumber</span><span class="p">:</span><span class="mi">10</span><span class="p">];</span>
+<span class="n">Foo</span><span class="o">*</span> <span class="n">foo3</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Foo</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithNumber</span><span class="p">:</span><span class="mi">15</span><span class="p">];</span>
+<span class="n">Foo</span><span class="o">*</span> <span class="n">fakeFoo</span> <span class="o">=</span> <span class="p">(</span><span class="n">Foo</span><span class="o">*</span><span class="p">)[[</span><span class="n">PXMultiForwarder</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithObjects</span><span class="p">:</span><span class="n">foo1</span><span class="p">,</span> <span class="n">foo2</span><span class="p">,</span> <span class="n">foo3</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+<span class="p">[[[[</span><span class="n">fakeFoo</span> <span class="nf">next</span><span class="p">]</span> <span class="nf">next</span><span class="p">]</span> <span class="nf">next</span><span class="p">]</span> <span class="nf">print</span><span class="p">];</span> <span class="c1">// NSLogs "Foo 3", "Foo 13", "Foo 18"
+</span></code></pre></div>
+<p>In this example, we wrap 3 <code>Foo</code> objects into a <code>PXMultiForwarder</code>, which can then be used directly as if it were a <code>Foo</code> object, but the methods called on it get forwarded to the original three <code>Foo</code>s. As far as the compiler is concerned, the object is just another <code>Foo</code> - it generates code to send the <code>next</code> and <code>print</code> messages as usual, and the forwarder determines <em>at runtime</em> what kind of object to return (if anything at all - <code>print</code> returns <code>void</code>, for example).</p>
+
+<p>Of course, the class is memory-management aware - when a method is forwarded, the forwarder determines whether or not the return value is owned by the caller (e.g. objects returned from <code>new</code>, <code>copy</code>, etc.) and deals with it appropriately. For someone using the class, this means you don&#39;t have to worry - memory management works like it would normally, whether your code uses ARC or not.</p>
+
+<p>If you want to use the class, there are a few minor caveats (some methods aren&#39;t forwarded, for example) - full documentation is available in <a href="https://github.com/pixio/PXMultiForwarder/blob/master/Pod/Classes/PXMultiForwarder.h">the header file</a>. While the use case for this class might seem obtuse, it was created to make things easier while working on a larger, UI-focused pod that we&#39;ll be seeing next week. Stay tuned.</p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on the shoulders of Spencer Phippen <em>or</em> Daniel Blakemore. The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote many example projects for the CococaPods that have and will be released. <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods he wrote himself. Others, like <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

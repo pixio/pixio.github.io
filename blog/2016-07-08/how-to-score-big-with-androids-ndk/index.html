@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How to score big with Android's NDK</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-07-08/how-to-score-big-with-androids-ndk/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">How to score big with Android's NDK</h1>
+    <p class="post-meta">
+      William Shupe • <span class="date">Jul 8, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>We have an unhealthy love for Rocket League here at Pixio, but our games usually end up looking like this:</p>
+
+<p><center>
+<img src="/img/posts/ndk/cat-rocket-league.gif" alt="Cat Picture">
+</center></p>
+
+<p>This is exactly what most people feel like when they first dive into the <a href="https://developer.android.com/ndk/index.html">Android Native Deveolpment Kit (NDK)</a>. At I/O 2015 Google announced better support for the Android NDK and these improvements have made native development easier than ever before. Let&#39;s go through some quick examples to see how to set up your code to take advantage of the new NDK support provided by Android Studio.</p>
+
+<h2 id="quick-background">Quick Background</h2>
+
+<p>The Android NDK is a set of tools that let you use C and C++ code in your Android application. It uses the <a href="https://en.wikipedia.org/wiki/Java_Native_Interface">Java Native Interface (JNI)</a> which allows Java code interop with C/C++ code. While most projects will be better suited to only use Java, some projects such as games, physics simulators, or anything that requires lots of CPU could benefit from using the NDK. Additionally, applications which use shared C/C++ libraries will benefit.</p>
+
+<h2 id="the-changes">The Changes</h2>
+
+<p>Google made big changes when the switch from Eclipse to the current IntelliJ backed Android Studio. It brought improved features and a better environment to develop Android applications. With the <a href="https://plus.google.com/+jetbrains/posts/P61rd5DnNK2">announcement</a> at I/O 2015, Google integrated <a href="https://www.jetbrains.com/clion/">CLion</a>, the Jetbrains C/C++ IDE, into Android Studio to provide much better support for NDK development. This change brought things like code completion, refactoring, debugging, and many other features to make developing with C and C++ in Android applications much easier. This year they continued to add on to this new experience by adding the ability to support pre-existing NDK projects that used ndk-build or CMake rather than Gradle. Also, the new updates allows the programmer to use a single debugger for both the Java and C/C++ code in a project, streamlining the debugging process.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>We&#39;re going to use some of the most up to date tools to gain the most benefit out of the recent changes to the Android NDK. Currently the enhanced NDK support is not in the stable channel, so we will be using the 2.2 preview 4 version of Android Studio and the 0.7.2 version of the Experimental Gradle plugin.</p>
+
+<h3 id="android-studio">Android Studio</h3>
+
+<p>First let&#39;s download and setup Android Studio. Since we are using a Canary version of Android Studio, Google recommends installing it alongside your stable version of Android Studio instead of replacing it. You can find the download <a href="http://tools.android.com/download/studio/builds/2-2-preview-4">here</a>.</p>
+
+<h3 id="create-android-project">Create Android Project</h3>
+
+<p>Now that we have Android Studio setup and running, lets create a new project for our example. Let&#39;s call our project <code>Android NDK Example</code>.</p>
+
+<p><img src="/img/posts/ndk/new1.png" alt="New Android Project">
+<img src="/img/posts/ndk/new2.png" alt="New Android Project">
+<img src="/img/posts/ndk/new3.png" alt="New Android Project">
+<img src="/img/posts/ndk/new4.png" alt="New Android Project"></p>
+
+<h3 id="install-ndk-package">Install NDK Package</h3>
+
+<p>Before we can write any code we need to install and configure the NDK. Open the SDK Manager and browse to the SDK Tools tab. Find the NDK and check the box next to it. Hit apply or OK to start the download. </p>
+
+<p><img src="/img/posts/ndk/sdk-ndk.png" alt="NDK install example"></p>
+
+<p>Installing the NDK can take a long time. It is a large download (&gt;1GB) so make sure you have a fast connection. While you&#39;re waiting read a book, take a nap, or go play some Rocket League (my personal choice).</p>
+
+<p>Once the NDK package has been installed, we need to make sure our project knows where to find it. Ensure that your project structure points to the correct NDK package.</p>
+
+<p><img src="/img/posts/ndk/ndklocation.png" alt="NDK install location"></p>
+
+<h3 id="configure-project">Configure Project</h3>
+
+<p>Now that we have our project created and the NDK Package configured, let&#39;s get our project ready for some native code. First let&#39;s edit the project gradle file. We need to tell it we are going to use the experimental gradle plugin. Let&#39;s change the classpath line for gradle to say this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">classpath 'com.android.tools.build:gradle-experimental:0.7.2'
+</code></pre></div>
+<p>Next let&#39;s edit the app module gradle file. The DSL has changed with the experimental gradle plugin so we need to update our app&#39;s gradle.</p>
+
+<p>Here&#39;s a quick summary of the changes:
+* We change the plugin from <code>com.android.application</code> to <code>com.android.model.application</code>
+* The <code>android</code> block is nested in a <code>model</code> block
+* We add <code>.apiLevel</code> to <code>minSdkVersion</code> and <code>targetSdkVersion</code> </p>
+<div class="highlight"><pre><code class="language-" data-lang="">apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion 23
+        buildToolsVersion "23.0.2"
+        defaultConfig {
+            applicationId "com.example.androidndkexample"
+            minSdkVersion.apiLevel 21
+            targetSdkVersion.apiLevel 23
+            versionCode 1
+            versionName "1.0"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+        buildTypes {
+            release {
+                minifyEnabled false
+                proguardFiles.add(file('proguard-android.txt'))
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+    testCompile 'junit:junit:4.12'
+}
+</code></pre></div>
+<p>Now that we have gradle set up properly with the experimental version, let&#39;s add the bit we need so we can write some NDK code.</p>
+
+<p>After <code>buildTypes</code> in the android block, let&#39;s add this NDK block:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">model {
+    android {
+        //...
+        ndk {
+            moduleName = "ndk-example-jni"
+        }
+    }
+}
+</code></pre></div>
+<p>This tells Android Studio that we want a module named <code>ndk-example-jni</code> which will allow us to interface between Java and C/C++. Do a gradle sync and we will be ready to write some code.</p>
+
+<h2 id="demo">Demo</h2>
+
+<h3 id="creating-and-calling-jni-functions">Creating and Calling JNI Functions</h3>
+
+<p>Since we have an unhealthy relationship with playing Rocket League here at Pixio, let&#39;s create a <code>Player</code> class so that we can mimic playing the game and displaying our stats. This example isn&#39;t to show off the speed of the Android NDK, but to give an example of setting up your code and using some of the new features provided by the new NDK support in Android Studio.
+For our <code>Player</code> class, let&#39;s create it with four member variables: <code>goals</code>, <code>shots</code>, and <code>assists</code>. These will be our stats from playing the game. For now our class should look like this:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">goals</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">shots</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">assists</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Player</span><span class="o">(){</span>
+        <span class="n">goals</span> <span class="o">=</span> <span class="n">shots</span> <span class="o">=</span> <span class="n">assists</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//Getters and Setters</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>In this class we need to let Android know that we want to load our NDK module. We&#39;ll write a static system call to load the <code>ndk-example-jni</code> library into our class.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="s">"ndk-example-jni"</span><span class="o">)</span>
+    <span class="o">}</span>
+
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>This tells Android to load the NDK module so we can call native functions. Now it&#39;s time for the magic of the new Android Studio NDK support to come into play. First define a function in the Player class that we want to call on the C side, let&#39;s call it <code>shoot()</code>.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+
+    <span class="c1">//...</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">boolean</span> <span class="nf">shoot</span><span class="o">();</span>
+
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Now we can let Android Studio create the native C method stub by placing the cursor over <code>shoot()</code>, pressing <code>Alt</code> + <code>Enter</code>, and then selecting <code>Create function Java_com_example_androidndkexample_Player_shoot</code>.</p>
+
+<video src="/img/posts/ndk/ndk-autocomplete.webm" loop=true autoplay=true></video>
+
+<p>This will create a folder at <code>src/main/jni</code> and place a new file called <code>ndk-example-jni.c</code> with our new native function in it.</p>
+
+<p><img src="/img/posts/ndk/jnifolder.png" alt="New File Location"></p>
+
+<p>Notice how the method signature must follow this exact pattern. It starts with the package name followed by the class name and the Java function name. This method signature is what allows the Java Native Interface to connect the Java and C/C++ code. </p>
+
+<p>Let&#39;s fill in this newly created function.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;jni.h&gt;
+</span>
+<span class="n">JNIEXPORT</span> <span class="n">jboolean</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_shoot</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">//Get a reference to the shots member variable field
+</span>    <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="n">jfieldID</span> <span class="n">shot_field_id</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">"shots"</span><span class="p">,</span> <span class="s">"I"</span><span class="p">);</span>
+
+    <span class="c1">//Get and set shots in Player class
+</span>    <span class="kt">int</span> <span class="n">shots</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">shot_field_id</span><span class="p">);</span>
+    <span class="n">shots</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">shot_field_id</span><span class="p">,</span> <span class="n">shots</span><span class="p">);</span>
+
+    <span class="c1">//For now we never score
+</span>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Look at that! We&#39;re accessing and modifying the Java object that called this native function. All we need is a class and field reference to be able to get and set member variables inside the calling class. The way Java represents objects is vastly different than in C or C++. That is why we need the jclass and jfieldID. It gives us a window into the Java class allowing us to reference and modify variables in the class from our C or C++ code. This is really powerful!</p>
+
+<p>You may have noticed the jboolean and jobject types. These are types that are used to take a Java type and convert it into something that can be used in C or C++ code. Other types include jint, jlong, jbyte, and so on. This allows us to have native euquivalents to our Java primitive types.</p>
+
+<p>Another thing to notice is the last parameter to the <code>GetIntField</code> function. In this example, we pass in &quot;I&quot;. This may seem arbitrary at first but this is how we tell the function that we want to reference a variable that is an int. There are letters that reference different types. For example &quot;F&quot; is for float, &quot;D&quot; is for double, and &quot;I&quot; is for integer. A full list of all the type signatures and primitive types can be found in <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/types.html">Oracle&#39;s documentation</a> for the JNI.</p>
+
+<p>Let&#39;s display some data now that we have the ability to take some shots. We&#39;ll create some buttons to shoot and pass as well as three TextViews to display our player statistics. Let that creativity flow and create a beautiful interface!</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="kd">implements</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="n">Player</span> <span class="n">mPlayer</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="c1">//TextView and Button setup code</span>
+
+        <span class="n">mPlayer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Player</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">getId</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">pass_button</span><span class="o">:</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">shoot_button</span><span class="o">:</span>
+                <span class="n">mPlayer</span><span class="o">.</span><span class="na">shoot</span><span class="o">();</span>
+                <span class="n">updateStats</span><span class="o">();</span>
+                <span class="k">break</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>It&#39;s great to see the shot counter go up, but we want to start scoring goals. When we shoot, there should be a chance to score a goal. Let&#39;s set up a new folder in the root of our project folder and call it <code>external</code>. We&#39;re going to place some C files in there and reference them through the C search path. We need to modify our app gradle file to do this.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">model {
+    android {
+        //...
+        ndk {
+            moduleName = "ndk-example-jni"
+            CFlags.add("-std=gnu99")
+            //Search Path
+            CFlags.add("-I${file("../external")}".toString())
+        }
+        sources {
+            main {
+                jni {
+                    source {
+                        srcDirs = ["src/main/jni", "../external"]
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre></div>
+<p>Notice how we have added the search path to our CFlags and set up the source directories. The project will have a default source directory of <code>src/main/jni</code> but we can either move it or specify multiple locations to build.</p>
+
+<p>Now that we have added our external folder, let&#39;s put two files in it. We&#39;ll call them <code>gameRandomness.h</code> and <code>gameRandomness.c</code>. These randomness files are really basic, but it gives an example of how to use and reference external C or C++ libraries, something we can&#39;t do without the NDK. </p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#ifndef ANDROIDNDKEXAMPLE_GAMERANDOMNESS_H
+#define ANDROIDNDKEXAMPLE_GAMERANDOMNESS_H
+</span>
+<span class="kt">int</span> <span class="n">passBecameAssist</span><span class="p">();</span>
+
+<span class="kt">int</span> <span class="n">shotBecameGoal</span><span class="p">();</span>
+
+<span class="cp">#endif //ANDROIDNDKEXAMPLE_GAMERANDOMNESS_H
+</span></code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;time.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="kt">int</span> <span class="n">playerActionWorked</span><span class="p">(){</span>
+    <span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">rand</span><span class="p">()</span> <span class="o">%</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">passBecameAssist</span><span class="p">(){</span>
+    <span class="k">return</span> <span class="n">playerActionWorked</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">shotBecameGoal</span><span class="p">(){</span>
+    <span class="n">playerActionWorked</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>These will be some random functions for our player actions to call. Let&#39;s call one by adding a pass function to our Player class. If a player passes, there should be a chance that they will gain an assist. That&#39;s not how assists work, but we want everyone to feel like they are helping, regardless of their true lack of contribution! We need to update our different files to let this happen.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+    <span class="c1">//...</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">pass</span><span class="o">();</span>
+
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Note that we need to include our new C header in our jni file to be able to use the random functions we just created.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;gameRandomness.h&gt;
+</span>
+<span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_pass</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">passBecameAssist</span><span class="p">()){</span>
+        <span class="c1">//Get a reference to the shots member variable field
+</span>        <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+        <span class="n">jfieldID</span> <span class="n">assist_field_id</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">"assists"</span><span class="p">,</span> <span class="s">"I"</span><span class="p">);</span>
+
+        <span class="c1">//Get and set assists in Player class
+</span>        <span class="kt">int</span> <span class="n">assists</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">assist_field_id</span><span class="p">);</span>
+        <span class="n">assists</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">assist_field_id</span><span class="p">,</span> <span class="n">assists</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="o">{</span>
+    <span class="c1">//...</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">getId</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">case</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">pass_button</span><span class="o">:</span>
+                <span class="n">mPlayer</span><span class="o">.</span><span class="na">pass</span><span class="o">();</span>
+                <span class="n">updateStats</span><span class="o">();</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">//...</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>If we run our app we can see that pushing the pass button only updates the assists counter part of the time. This is exactly what we wanted. We can add the same chance functionality to the shot button.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">JNIEXPORT</span> <span class="n">jboolean</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_shoot</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">//Get a reference to the shots member variable field
+</span>    <span class="n">jclass</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="n">jfieldID</span> <span class="n">shot_field_id</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">"shots"</span><span class="p">,</span> <span class="s">"I"</span><span class="p">);</span>
+
+    <span class="c1">//Get and set shots in Player class
+</span>    <span class="kt">int</span> <span class="n">shots</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">shot_field_id</span><span class="p">);</span>
+    <span class="n">shots</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">shot_field_id</span><span class="p">,</span> <span class="n">shots</span><span class="p">);</span>
+
+    <span class="c1">//See if we scored
+</span>    <span class="k">if</span><span class="p">(</span><span class="n">shotBecameGoal</span><span class="p">()){</span>
+        <span class="n">jfieldID</span> <span class="n">goal_field_id</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="s">"goals"</span><span class="p">,</span> <span class="s">"I"</span><span class="p">);</span>
+
+        <span class="c1">//Get and set goals in Player class
+</span>        <span class="kt">int</span> <span class="n">goals</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">goal_field_id</span><span class="p">);</span>
+        <span class="n">goals</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetIntField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">goal_field_id</span><span class="p">,</span> <span class="n">goals</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="passing-and-receiving-data">Passing and Receiving Data</h3>
+
+<p>So far we&#39;ve been able to shoot and pass. Now let&#39;s add some functionality to let the user know the result of their Player actions. We will need to add a TextView to display the status and return strings from our native functions to display to the user. We will also need to change the return values of the methods for the Player class.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+    <span class="c1">//...</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">shoot</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">pass</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">save</span><span class="o">();</span>
+
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_shoot</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">//...
+</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">shotBecameGoal</span><span class="p">()){</span>
+        <span class="c1">//...
+</span>
+        <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">"Nice shot! Nice shot! Nice shot!"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">"Close one..."</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_pass</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">passBecameAssist</span><span class="p">()){</span>
+        <span class="c1">//...
+</span>
+        <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">"Pass became an assist!"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewStringUTF</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s">"Player passed the ball."</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>When we run this we can now see the result of our attempts to shoot or pass. There are many things that you can receive and return from native functions. These can be simple things like primitives all the way up to full Java objects. You can even call member functions from the calling class. The Android NDK can be a very powerful tool once you overcome the steep learning curve.</p>
+
+<h3 id="logging-and-debugging">Logging and Debugging</h3>
+
+<p>Let&#39;s add one more thing to our app. When our Player shoots, the Player should shoot with a certain power value. If the power value is greater than 4, the shot will score no matter what. Otherwise the shot will score based off of our random values. Here&#39;s the code we need to change to do this.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Player</span> <span class="o">{</span>
+    <span class="c1">//...</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">String</span> <span class="nf">shoot</span><span class="o">(</span><span class="kt">int</span> <span class="n">power</span><span class="o">);</span>
+
+    <span class="c1">//...</span>
+<span class="o">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">//...
+</span><span class="kt">int</span> <span class="n">shotBecameGoal</span><span class="p">(</span><span class="kt">int</span> <span class="n">power</span><span class="p">);</span>
+<span class="c1">//...
+</span></code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">//...
+</span><span class="kt">int</span> <span class="n">shotBecameGoal</span><span class="p">(</span><span class="kt">int</span> <span class="n">power</span><span class="p">){</span>
+    <span class="k">return</span> <span class="n">power</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="o">||</span> <span class="n">playerActionWorked</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">//...
+</span></code></pre></div><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_shoot</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="n">jint</span> <span class="n">power</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">//...
+</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">shotBecameGoal</span><span class="p">(</span><span class="n">power</span><span class="p">)){</span>
+        <span class="c1">//...
+</span>    <span class="p">}</span>
+
+    <span class="c1">//...
+</span><span class="p">}</span>
+</code></pre></div><div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="kd">implements</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="o">{</span>
+
+    <span class="c1">//...</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">switch</span> <span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">getId</span><span class="o">())</span> <span class="o">{</span>
+            <span class="c1">//...</span>
+            <span class="k">case</span> <span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">shoot_button</span><span class="o">:</span>
+                <span class="n">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
+                <span class="kt">int</span> <span class="n">power</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+                <span class="n">String</span> <span class="n">shotResult</span> <span class="o">=</span> <span class="s">"Shot with power "</span> <span class="o">+</span> <span class="n">power</span> <span class="o">+</span> <span class="s">": "</span> <span class="o">+</span> <span class="n">mPlayer</span><span class="o">.</span><span class="na">shoot</span><span class="o">(</span><span class="n">power</span><span class="o">);</span>
+                <span class="n">updateStats</span><span class="o">();</span>
+                <span class="n">updatePlayerStatusText</span><span class="o">(</span><span class="n">shotResult</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="c1">//...</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Great! Now that our player can shoot with different power values, let&#39;s look at how we can view that power value. First we can set breakpoints in our Java and C/C++ code. When we run the app in debug mode we can stop the execution of the code and inspect the variables and environments in both the Java and C/C++ code. It may take some time to get used to jumping between Java and C/C++ when stepping through the code with the debugger, but it is a powerful tool to use to find out what is happening as your code executes.</p>
+
+<p>What if you want to log data to the Android log from your C/C++ code? The NDK has you covered on this. All you have to do is import the Android log header file and call the log print function and your log messages will show up in the Android log.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;android/log.h&gt;
+</span>
+<span class="n">JNIEXPORT</span> <span class="n">jstring</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_example_androidndkexample_Player_shoot</span><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="n">jint</span> <span class="n">power</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kt">char</span> <span class="n">buffer</span> <span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+    <span class="n">snprintf</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">"Player shot with a power of %d."</span><span class="p">,</span> <span class="n">power</span><span class="p">);</span>
+    <span class="n">__android_log_print</span><span class="p">(</span><span class="n">ANDROID_LOG_DEBUG</span><span class="p">,</span> <span class="s">"AndroidNDKExample-JNI"</span><span class="p">,</span> <span class="n">buffer</span><span class="p">);</span>
+
+    <span class="c1">//...
+</span>    <span class="k">if</span><span class="p">(</span><span class="n">shotBecameGoal</span><span class="p">(</span><span class="n">power</span><span class="p">)){</span>
+
+        <span class="n">__android_log_print</span><span class="p">(</span><span class="n">ANDROID_LOG_DEBUG</span><span class="p">,</span> <span class="s">"AndroidNDKExample-JNI"</span><span class="p">,</span> <span class="s">"Player's shot became a goal."</span><span class="p">);</span>
+
+        <span class="c1">//...
+</span>    <span class="p">}</span>
+
+    <span class="c1">//...
+</span><span class="p">}</span>
+</code></pre></div>
+<p>The log print function allows you to specify the log level, a tag, and a message to print just like you can in Java. This can be another great tool for building and debugging your NDK application.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The Android NDK can be a bit of a daunting task at first, but once you get the basic concepts down it can be a very powerful tool for your applications. A lot of projects will not need to use the NDK, but knowing how to use the NDK gives you much greater flexibility in your application allowing more 3rd party libraries and more shared codebases. With the recent updates to Android Studio to better suppor the NDK, harnessing the power and speed of native development has never been easier.</p>
+
+<p><center>
+<video src="/img/posts/ndk/dave.webm" loop=true autoplay=true></video>
+</center></p>
+
+<p>You can find the demo project <a href="https://github.com/williamshupe/AndroidNDKExample">here</a>.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

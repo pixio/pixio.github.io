@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; A Tutorial On Tutorials</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-10-09/a-tutorial-on-tutorials/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; A Tutorial On Tutorials</h1>
+    <p class="post-meta">
+      Daniel Blakemore • <span class="date">Oct 9, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <h2 id="in-this-tutorial-i-39-m-going-to-show-you-how-to-make-a-tutorial">In this tutorial I&#39;m going to show you how to make a tutorial</h2>
+
+<div style="text-align:center"><img src="/img/posts/squinting.jpg" width="250" /></div>
+
+<h6 id="preface">Preface</h6>
+
+<p><em>Slight change of plans from last week: I forgot that this pod was in the mix for this week and it&#39;s just good enough to eke out an entire article on its own.  So the other stuff from the remaining grab bag will be next week.</em></p>
+
+<p>There are varying levels of tutorials in iOS apps, from something as simple as an annotated screenshot on the App Store listing to a complicated, very closely integrated set of puppet actions that walk users through your app, highlighting one bit of functionality at a time.</p>
+
+<p>As a user I don&#39;t really like the first one, and as a developer I really don&#39;t want to implement the second one.  But most of the time, a series of images or screenshots with some accompanying text is good.  Usually you swipe various pages (or skip them if you know how to use the app) and then proceed to the first screen in the app.  This seems to be an acceptable not-lazy-but-also-easy solution to adding tutorials to your app (especially feature-specific tutorials, since users tire of swiping through 50 screens to get to their content).</p>
+
+<p>What I&#39;m going to show you is One Weird Trick to make these tutorials that won&#39;t require much effort from you.</p>
+
+<h2 id="pxtutorialmanager"><a href="https://github.com/pixio/PXTutorialManager">PXTutorialManager</a></h2>
+
+<p>So let&#39;s role play.  You be an app developer that wants to put a tutorial in a mostly complete app.  I&#39;ll be your magical helper elf and make this an easy task to complete.</p>
+
+<p>Okay dev, there are some things I need from you:</p>
+
+<ul>
+<li>Some screenshots of your app (or any other image-based content you want to highlight as a part of your tutorial)</li>
+<li>Text descriptions for each of these images</li>
+<li>The ability to write a simple JSON file</li>
+</ul>
+
+<p>See, that wasn&#39;t so hard.  Oh wait, I&#39;m getting ahead of myself.  Now, make me a JSON file called <code>APPTutorial.json</code> that looks like this:</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nt">"storageVersion"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"pageArray"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"pageTitle"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Welcome to APP"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageText"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"This is the best feature of APP, and presumably the reason you downloaded it."</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageImageName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"bestFeatureOfAPPScreenshot"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"pageTitle"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Get Started with APP"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageText"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"This is an example of how to use APP.  You will love it!"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageImageName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"usingAPPExampleScreenshot"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"pageTitle"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"APP is Great"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageText"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Now that you've seen how to use all the FEATURES in APP, go forth and enjoy APP!"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"pageImageName"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"greatAPP"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>Alright.  Now you are done.</p>
+
+<p>What?  You want to know what this has to do with making a tutorial?</p>
+
+<p>Well I&#39;ll tell you, Dmitri, you&#39;ve given me all the information I need to make your tutorial.  Yes.  That was a nice process. I agree. Yes it was simple, Dmitri.  I&#39;m glad you thought so too.  Alright.  Yes, it&#39;s good that we both agree that this was easy.</p>
+
+<p>There&#39;s only one more step you need to complete.  Put this in your code where you want to display the tutorial:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">PXTutorialManager</span> <span class="nf">presentTutorial</span><span class="p">:</span><span class="s">@"APPtutorial"</span> <span class="nf">force</span><span class="p">:</span><span class="n">TRUE</span><span class="p">];</span>
+</code></pre></div>
+<p>That&#39;s all you have to do.  And you get this in return:</p>
+
+<div style="text-align:center"><video src="/img/posts/tutorial.webm" loop=true autoplay=true height="500px"></video><br /></div>
+
+<p>There are many other options you can use to configure the look of the tutorial.  Colors for everything, custom background images, font, text, EVERYTHING.  You&#39;re gonna like the way it looks, I guarantee it.</p>
+
+<h2 id="the-grab-bag">The Grab Bag</h2>
+
+<p>Okay, so next week I&#39;ll bring out the grab bag.  One tutorial manager short, but still some interesting stuff inside.</p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on my shoulders.  The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote almost every example project for all the CococaPods that have and will be released.  <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods he wrote himself.  Others, like <a href="https://github.com/sphippen">Spencer Phippen</a> and <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>C Considered Awesome</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-07-15/c-considered-awesome/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">C Considered Awesome</h1>
+    <p class="post-meta">
+      Karter Roberts • <span class="date">Jul 15, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p><sup><sup>Everything written here is garbage and you should not listen to a word of it.  Enjoy.</sup></sup></p>
+
+<p>With so many languages, platforms, and frameworks in today&#39;s modern computer development world, it&#39;s easy to lose sight of the foundations of the field that have made computing great.  Without question one of those pillars is the C programming language.  C is <em>everywhere</em>, it&#39;s all around us, even now in this very room.  You can see it when you look out your window (probably), or when you turn on your television (almost definitely).  You use it when you go to work, when you go to church, when you pay your taxes. C underlies much of the computing done today whether you know it or not. And that&#39;s what makes it so important.</p>
+
+<p>But beyond importance, it&#39;s a great language to work with.  There are so many subtle features and tricks you can take advantage of that have been folded into the intricate, time-tested fabric of the C language (and its derivative languages).  It&#39;s cool that you can write a website with 4 characters of ruby code or make make the next $1Trillion app by drag and dropping a zipped text file into a web service, but some engineering challenges really do <em>need</em> to be solved.  And sometimes those problems are best solved with low-level, performant, close-to-the-metal, no-holds-barred, potentially-cryptic, always-awesome C code.</p>
+
+<p>But let&#39;s talk about why you&#39;re here.  You&#39;re here to learn some of those tricks that make C the greatest language around.  I will warn you that if you use some of these in your own projects, your less-enlightened coworkers may begin to fear or despise your clear mastery of the art of the code.  But soldier on.  These tricks will almost definitely make your code the most memorable and unique works of typography at your firm. You may even begin to receive attention from upper management that could potentially have life-changing effects on your career.</p>
+
+<p>Are you ready?</p>
+
+<h2 id="c-tricks-your-instructor-never-told-you-about">C Tricks Your Instructor Never Told You About</h2>
+
+<p>Think of these tricks as lifehacks for code.  Once you know about them, you won&#39;t be able to help but sprinkle them around your code.  And the impact of this will be hard to miss.</p>
+
+<h3 id="c-supports-inline-citations-right-in-your-code">C supports inline citations right in your code</h3>
+
+<p>Have you ever been stumped?  Don&#39;t worry, it happens to everyone.  But sometimes other people were stumped before you by the same problem. When they solved it, they posted their solutions for all to see. But you probably don&#39;t want to steal their implementation outright.  If your boss found out, they might think you don&#39;t know how to do your job.</p>
+
+<p>Let&#39;s turn the tables.  After seeing this advanced knowledge in action, your boss will have no question of your skill and you get to use the code you found without fear.</p>
+
+<p>Let&#39;s see it in action.  Your boss asks you to fill out this method:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">print_sevenTimes</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Do your job here
+</span><span class="p">}</span>
+</code></pre></div>
+<p>So you come up with a solution:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">print_sevenTimes</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ensure null termination
+</span>    <span class="n">str</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 1
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 2
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 2
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 4
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 5
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 6
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 7
+</span>
+    <span class="k">return</span><span class="p">;</span>
+
+
+
+<span class="p">}</span>
+</code></pre></div>
+<p>But your boss comes back with a change from the client.  They actually want to be able to specify how many times it prints.  So your boss suggests that a loop might help.  Now you&#39;ve got serious trouble.  So you jump online and search for a loop.  Here&#39;s an accepted answer that looks promising: <a href="http://stackoverflow.com/a/3477439">http://stackoverflow.com/a/3477439</a>.</p>
+
+<p>Let&#39;s see the code that will impress your boss.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">printmanyTimes</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">times</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ensure null termination
+</span>    <span class="n">str</span><span class="p">[</span><span class="n">len</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">static</span> <span class="kt">jmp_buf</span> <span class="n">buf</span><span class="p">;</span>
+
+    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">setjmp</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">times</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">str</span><span class="p">);</span> <span class="c1">// 7
+</span>        <span class="n">longjmp</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">i</span><span class="o">++</span><span class="p">);</span>
+    <span class="p">}</span> 
+    <span class="nl">http:</span><span class="c1">//stackoverflow.com/a/3477439
+</span>
+    <span class="k">return</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>Notice how the power of C let&#39;s you paste your link right into your function so you can document the source of the loop code you&#39;re using.  That&#39;s some forward thinking on the part of the language designers.</p>
+
+<p>Now your code can print as many times as your boss wants and if anyone asks how it works, you can kindly direct them to line 12.  No plagiarism, no problems #tripleairhorn.</p>
+
+<h3 id="the-loop-anyone-can-read">The Loop Anyone Can Read</h3>
+
+<p>So your clients just dropped another head scratcher on your desk.  You&#39;ve got to double the contents of an entire array:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">doubleMyArray</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// double every element    
+</span><span class="p">}</span>
+</code></pre></div>
+<p>After a bit of trial and error, you&#39;ve concluded that normal multiplication isn&#39;t what you&#39;re after, then you remember the printing problem.  Aha! This calls for a loop.  But hold on there, we don&#39;t want to just copy-paste the loop we found before.  That&#39;s old hat.  And some of your coworkers wanted you to teach them how it worked.  No one has time for distractions like that.  Time for a new trick.</p>
+
+<p>You already know about <code>while</code> but you&#39;re wishing it were simpler.  Think about all those times you forgot to mess with the condition variable and all the wasted hours waiting in vain for your program to finish.  Let me introduce you to the only <code>while</code> you&#39;ll ever use: the down-to-while.</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">doubleMyArray</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span> <span class="n">arr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// double every element
+</span>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">len</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">i</span> <span class="o">--&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// while i goes down to 0, brilliant!
+</span>        <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// done, baby
+</span>        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The designers of the C language understood the complex nature of looping control flow (loop code, for short).  That&#39;s why they included an operator just for loops that makes it clear to anyone what&#39;s going on.  The down-to operator <code>--&gt;</code> is handy because it&#39;s totally clear what&#39;s going on.  Now the next time your coworkers ask for an explanation, you can laugh and say &quot;While <code>i</code> goes down to 0.  Duh.&quot;.</p>
+
+<h3 id="arrays-aren-39-t-picky">Arrays Aren&#39;t Picky</h3>
+
+<p>You see arrays a lot in code.  I think I use them almost every time I write a code.  And I bet, like me, you&#39;ve been confused when someone gives you an <code>int *</code> and tells you it&#39;s &quot;just an array&quot;.  Yeah?  Then where&#39;s the <code>[]</code>, huh buddy?  Fear not.  They&#39;re actually not wrong, despite how confusing it might seem.  But when dealing with these arrays-in-pointers clothing, it might be easy to get confused.  Normally in code like this, it&#39;s easy to get something out of an array:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="n">myArr</span><span class="p">[];</span>
+
+<span class="n">myArr</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+</code></pre></div>
+<p>It&#39;s clear from the declaration that the way you access the array is with the <code>[]</code>.  You can even copy the whole shebang and just fill in the <code>[]</code> part.  But does the same hold true for these <code>int*</code> things?</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="o">*</span><span class="n">myArr2</span><span class="p">;</span>
+
+<span class="o">*</span><span class="n">myArr25</span><span class="p">;</span>  <span class="c1">// ?
+</span><span class="mi">5</span><span class="o">*</span><span class="n">myArr2</span><span class="p">;</span>  <span class="c1">// ?
+</span><span class="o">*</span><span class="mi">5</span><span class="n">myArr2</span><span class="p">;</span>  <span class="c1">// ?
+</span><span class="mi">5</span><span class="o">*</span><span class="mi">5</span><span class="n">myArr2</span><span class="p">;</span> <span class="c1">// ????
+</span></code></pre></div>
+<p>There&#39;s got to be a better way.  And there is.  It turns out, you can actually use (as you may have noticed in some of the code for previous tricks) the <code>[]</code> just the same.  But without the copy-paste opportunity, it may be difficult to remember exactly what to do.  Never fear.  Once again, the C people saw this one coming.  That&#39;s why the <code>[]</code> is so flexible.  What do I mean?  Let me show you:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="o">*</span> <span class="n">myArr3</span><span class="p">;</span>
+
+<span class="n">myArr3</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>  <span class="c1">// 👍
+</span><span class="mi">5</span><span class="p">[</span><span class="n">myArr3</span><span class="p">];</span>  <span class="c1">// also 👍
+</span></code></pre></div>
+<p>You don&#39;t even need to worry about where to put those brackets.  As long as you remember that they separate the first and second parts (they go around the second part), you&#39;re good.  C&#39;s got you covered.  Never fear the pointer again.</p>
+
+<h3 id="getting-internal-with-extern">Getting Internal With Extern</h3>
+
+<p>There are times where, despite your best effort, you need code that is not your own.  We&#39;ve seen this already. Sometimes, though, it&#39;s not code you have access to directly.  Let&#39;s look at a mock real world example.</p>
+
+<p>You&#39;ve got a library that your company is licensing for a ton of money.  The eggheads behind this baby are something else.  In this library (you know this because you go drinking with a guy who use to work at the company that makes it) there&#39;s a special number they use that makes a ton of their calculations faster.  Now, everyone knows that this is the secret sauce of this company and you&#39;ve got to pay them to taste it.  Every time you call any codes that use this number, their library records it and it goes on your monthly licensing bill.  But your boss thinks <em>you</em> can do better.  And he&#39;s right.</p>
+
+<p>This is where <code>extern</code> comes in.  You may have seen this keyword used already to let you give others access to your code from a header file while keeping the implementation safely away from prying eyes in your .c file (or better yet, a .dll).  But <code>extern</code> has another use.  It can actually be used to pull things directly into your code from elsewhere.  Let&#39;s take a look:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Code.c
+</span><span class="cp">#include &lt;expensiveLib.h&gt;
+</span>
+<span class="c1">// let's grab their magic constant.
+// Your friend let you know the variable they store it in is called finvsqc (wtf lol?)
+</span><span class="k">extern</span> <span class="kt">int</span> <span class="n">finvsqc</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\r\n</span><span class="s">"</span><span class="p">,</span> <span class="n">finvsqc</span><span class="p">);</span> <span class="c1">// 1597463007 (what's so special about this number?) Oh well
+</span><span class="p">}</span>
+
+</code></pre></div>
+<p>Even though the clever folks at the library company didn&#39;t put any mention of <code>finvsqc</code> in any of their header files, you can still reach right in and grab it if you know the name.  You&#39;ve just saved your company money and made your boss look like a hero to the CFO.  Nice job.</p>
+
+<h1 id="objective-c-structure-beyond-structs">Objective-C: Structure Beyond Structs</h1>
+
+<p>Long ago in the history of computing, the idea of Objects was invented.  Data storage with specialized methods defined on them.  And with objects came inheritance: the ability to make more complex versions of an object or change its behavior by creating a modified version that inherited from the original.  It wasn&#39;t long after that these ideas were brought to C at the language level.  Although, not C itself.  Like the concept of objects, languages were designed that inherited from C and added functionality (like Objects).  Two notable examples of this are C++ and Objective-C.  </p>
+
+<h2 id="the-runtime-won-39-t-even-see-you-coming">The Runtime Won&#39;t Even See You Coming</h2>
+
+<p>Although Objective-C was invented later than C++, I&#39;ll be going over my Objective-C tricks first.  These will be shorter than the C tricks because you may be unfamiliar with these languages so there&#39;s no need to add the confusion of a story problem.</p>
+
+<h3 id="context-is-everything">Context Is Everything</h3>
+
+<p>Think of this trick as a conceptual bridge between the C tricks above and Objective-C.  The trick itself applies to C just as well, but really shines in Objective-C.  You&#39;ll see what I mean.</p>
+
+<p>In Objective-C and more specifically, the Foundation libraries provided by Apple, there are a host of methods which take a &quot;context&quot; argument to help you keep multiple calls and callbacks straight. A call to one of these might look like this:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">foo</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"bar"</span> <span class="n">options</span><span class="o">:</span><span class="mi">0</span> <span class="n">context</span><span class="o">:</span><span class="p">...];</span>
+</code></pre></div>
+<p>Don&#39;t mind the brackets, that&#39;s just the way object methods are called.  The Objective-C designers opted for this type of method call because it makes the code read like english and is therefore &quot;self-documenting&quot;.  Neat.</p>
+
+<p>In the snippet above you can see we left the <code>context</code> argument blank.  Well, you have to specify something.  According to Apple, <code>context</code> is:</p>
+
+<blockquote>
+<p>Arbitrary data that is passed to <code>anObserver</code> in <code>observeValueForKeyPath:ofObject:change:context:</code>.</p>
+</blockquote>
+
+<p>So what do we use if our use case has no context, or is context-free if you will.  The designers of Objective-C knew you&#39;d ask that and they have the perfect context for you to use in this case: <code>free</code>.  You can just go ahead and type <code>free</code> so Objective-C knows you don&#39;t want to use a context:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">foo</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">forKeyPath</span><span class="p">:</span><span class="s">@"bar"</span> <span class="n">options</span><span class="o">:</span><span class="mi">0</span> <span class="n">context</span><span class="o">:</span><span class="n">free</span><span class="p">];</span>
+</code></pre></div>
+<p>How&#39;s that for self documenting?  Anyone who is reading this code will instantly know that you don&#39;t care about the context in this case and your observing is context-free.</p>
+
+<h3 id="can-i-see-your-id">Can I See Your ID</h3>
+
+<p>In Objective-C, all objects inherit from <code>NSObject</code>. So if you want to define a function that takes in an object, it works like this:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">BOOL</span> <span class="nf">isObject</span><span class="p">(</span><span class="n">NSObject</span><span class="o">*</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Alternatively, the language adds a new keyword <code>id</code> which just means object.  So you can transform the above function into:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">BOOL</span> <span class="nf">isObject</span><span class="p">(</span><span class="n">id</span> <span class="n">object</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Check that out.  Think of the keystroke savings, and as a bonus you don&#39;t even have to worry about the <code>*</code> at all.  But the true benefits are yet to come.  Let&#39;s say I  have this class:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@interface</span> <span class="nc">NumberTracker</span> <span class="p">:</span> <span class="nc">NSObject</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span> <span class="n">delegate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSNumber</span><span class="o">*</span> <span class="n">trackedNumber</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>It&#39;s great for tracking numbers, but as you may have heard, computers don&#39;t understand money numbers.  Well, not normally.  The authors of the Foundation library understood this and created a class that could help us out: <code>NSDecimalNumber</code>. It&#39;s like <code>NSNumber</code> but for decimal number systems like currency.  Let&#39;s use it to make our money tracker:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@interface</span> <span class="nc">MoneyTracker</span> <span class="p">:</span> <span class="nc">NumberTracker</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">id</span> <span class="n">delegate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSDecimalNumber</span><span class="o">*</span> <span class="n">trackedMoney</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>But in the implementation, we want to have the <code>trackedMoney</code> property use the same storage as the old <code>trackedNumber</code> to save memory.  If we did this, the compiler would complain:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">@implementation</span> <span class="nc">MoneyTracker</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span> <span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span>  <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_trackedNumber</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDecimalNumber</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">NSDecimalNumber</span><span class="o">*</span><span class="p">)</span><span class="n">trackedMoney</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nf">trackedNumber</span><span class="p">];</span> <span class="c1">// compiler warning
+</span><span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setTrackedMoney</span><span class="o">:</span><span class="p">(</span><span class="n">NSDecimalNumber</span><span class="o">*</span><span class="p">)</span><span class="n">trackedMoney</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setTrackedNumber</span><span class="p">:</span><span class="n">trackedMoney</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div>
+<p>But we <em>know</em> that it&#39;s an <code>NSDecimalNumber</code>.  Fortunately you can use the handy <code>id</code> keyword to tell the compiler that you know what you&#39;re doing:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="n">NSDecimalNumber</span><span class="o">*</span><span class="p">)</span><span class="n">trackedMoney</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">id</span><span class="p">)[</span><span class="n">self</span> <span class="nf">trackedNumber</span><span class="p">];</span> <span class="c1">// take a step back, compiler, I got this
+</span><span class="p">}</span>
+</code></pre></div>
+<p>It&#39;s that simple and you&#39;ve eliminated another warning.</p>
+
+<h1 id="c-the-evolution">C++: The Evolution</h1>
+
+<p>C++ is an entirely different animal than C.  It looks like C at first glance but you&#39;ll start to notice lots of <code>&lt;&gt;</code> and <code>&lt;&lt;</code> and <code>::</code>.  C++ is C on another level (hence the name).  It adds objects and classes and a whole host of other things that make it a wonderful, powerful successor to the ubiquitous C for those brave enough to undertake learning it.  Since we looked at subclassing in the Objective-C tricks section, I thought it was worth mentioning the <em>even more powerful</em> subclassing you can do in C++.  This is the only C++ trick I&#39;ll be offering today, but it should get you on the right road if you&#39;re just starting of in C++ development.</p>
+
+<h2 id="a-taste-of-change">A Taste of Change</h2>
+
+<p>C++ takes object orientedness to an entirely new level by allowing your classes to inherit from <em>multiple</em> parent classes.  That&#39;s right.  You can inherit the functionality and member variables of more than once class at a time.  Let&#39;s take a dive into how this works.</p>
+
+<p>Your boss comes to you with a new color receipt printer and an SDK for it.  The SDK method you have to call is:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="n">printColoredString</span><span class="p">(</span><span class="n">PrinterString</span> <span class="n">str</span><span class="p">,</span> <span class="n">PrinterColor</span> <span class="n">clr</span><span class="p">)</span>
+</code></pre></div>
+<p>But you already have code to run the old SDK for the black and white printers that takes just a string:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="n">printString</span><span class="p">(</span><span class="n">PrinterString</span> <span class="n">str</span><span class="p">);</span>
+</code></pre></div>
+<p>Rather than add another list of colors that you have to keep consistent with your existing string list, bask in the glory of the C++ designers&#39; wisdom and leverage multiple inheritance.  You simply need to create a drop-in replacement for <code>string</code> that you can use in <em>both</em> SDK versions.  But what would that look like?  Like this:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">PrintableString</span> <span class="o">:</span> <span class="k">public</span> <span class="n">PrinterString</span><span class="p">,</span> <span class="k">public</span> <span class="n">PrinterColor</span> <span class="p">{</span>
+    <span class="c1">// everything is already implemented by the individual classes. C++ WIN!
+</span><span class="p">};</span>
+</code></pre></div>
+<p>Now that you have that all set, you only have to make a minor modification to the way you use the SDK:</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="kt">void</span> <span class="nf">internal_stringPrint</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">PrintableString</span><span class="o">&gt;</span> <span class="n">strings</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">strings</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">printsdk</span><span class="o">::</span><span class="n">printsdk</span><span class="p">.</span><span class="n">version</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// new code
+</span>            <span class="n">printsdk</span><span class="o">::</span> <span class="n">printColoredString</span><span class="p">(</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">strings</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// old code
+</span>            <span class="n">printsdk</span><span class="o">::</span><span class="n">printString</span><span class="p">(</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That conversion is so simple.  And if any functionality gets added, you can just add to <code>PrintableString</code> and add another case to <code>internal_stringPrint</code>.  C++ is powerful.</p>
+
+<h1 id="c-you-later">C You Later</h1>
+
+<p>Now that you&#39;ve gotten a taste of the things that make C (and its descendants) so  great, I hope you&#39;re filled with the same passionate feelings that this code inspires in anyone who encounters it.  Thanks for reading all the way to then end.</p>
+
+<p><center>
+<img src="/img/posts/thumbs-up.jpg" alt="success">
+</center></p>
+
+<style>
+img { 
+  max-width:  500px; 
+  display: inline-block;
+}
+</style>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

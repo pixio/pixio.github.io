@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Battle of the bOStards: Activities vs. View Controllers</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-08-12/activities-vs-view-controllers/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Battle of the bOStards: Activities vs. View Controllers</h1>
+    <p class="post-meta">
+      Sam Trout • <span class="date">Aug 12, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>Like most things in life, there is almost always a Game of Thrones (GoT) analogy that can be used to describe it perfectly. In the case of Android vs. iOS there is no better analogy in the GoT universe than the 2016 episode <a href="http://www.imdb.com/title/tt4283088/?ref_=fn_al_tt_1">Battle of the Bastards</a>. For those that do not know what GoT is, or have yet to see the episode, I will give you a brief spoiler-proof overview. The plot line is pretty straightforward, there is a battle between good and evil. Now most you are probably asking yourself, how in the world does a battle between good and evil from a fantasy TV show relate to Android vs. iOS? Pretty much every mobile developer I have ever come across has a predetermined opinion on which mobile platform is better, and in most developer’s eyes, usually one of the platforms is good and the other is pure evil. (Oh, and FYI, if they say that they prefer Windows Phone, run and hide, because only a white walker would support the platform of the living dead).</p>
+
+<p>The focus of today is Android Activities vs. iOS View Controllers. In this article I will describe what each of these things are, their pros and cons, and provide a small example for each highlighting a few of their features.  Let’s first start with Activities.</p>
+
+<h4 id="activities">Activities:</h4>
+
+<p>An <a href="https://developer.android.com/guide/components/activities.html">Activity</a> is a single, focused thing that a user can do. This definition might seem very vague and general - that’s because Activities are meant to be general purpose. But while Activities might be able to perform a number of different actions, one thing remains the same: Activities are a crucial part of every Android application. In fact they are so crucial that every single android application is required to have at least one Activity, and oftentimes they are made up of a number of them, unless of course a developer chooses to use fragments, but that is an entirely different subject for another day.
+An Activity often acts as the Controller in the Model-View-Controller (MVC) architecture. It is responsible for communicating with the model and determining what information to display to the user.  Beyond their immediate function, they have a complex “life cycle”: the ways in which they are created, displayed, hidden, and destroyed by the system.  This life cycle consists of a number of different methods that are called at different points during the Activities life. Some of these methods include <code>onCreate()</code>, <code>onResume()</code>, <code>onStop()</code> and <code>onDestroy()</code> just to name a few.  It is crucial for any Android developer to not only know of all these life cycle methods, but to also understand when and why they are called during the activities life cycle.  </p>
+
+<p>Now that you have had an overview on what an activity is, and a few of its life cycle methods, let’s jump right into an example. In this example we will create a simple activity and demonstrate when a few of its life cycle methods are called.
+First let’s start a new Android studio project. You can name your project whatever you like, I chose ActivityExample. Next let’s select the minimum SDk as API 16, start with a blank activity, and leave the activity name as MainActivity. Now that we are all set up let’s see what we have got to work with. If you open the <code>MainActivity.java</code> file you will see that we have one method in our class, <code>onCreate()</code>. <code>onCreate()</code> is crucial to every activity because it specifies what needs to happen when an Activity is created for the first time (think of it as a constructor).  By default the MainActivity is making a call to super and setting a view that will be displayed to the user. This is very typical of an Activity, and most Activities will make at a minimum these two calls in <code>onCreate()</code>.</p>
+
+<p>Now run the app. You should see a blank screen with the famous, “Hello World” displayed on it. Now that you have a basic activity up and running, let’s do something useful with it. In Android Studio navigate to the <code>activity_main.xml</code>layout file in the res/layout folder and open it up. Change the layout to a <code>RelativeLayout</code> and put an <code>EditText</code> object in the center of the screen, making sure to change the background color so we can see it. Like so.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+
+<span class="nt">&lt;RelativeLayout</span>
+
+    <span class="na">android:id=</span><span class="s">"@+id/activity_main"</span>
+
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+
+    <span class="na">xmlns:app=</span><span class="s">"http://schemas.android.com/apk/res-auto"</span>
+
+    <span class="na">xmlns:tools=</span><span class="s">"http://schemas.android.com/tools"</span>
+
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+
+    <span class="na">android:layout_height=</span><span class="s">"match_parent"</span>
+
+    <span class="na">tools:context=</span><span class="s">"org.com.activityexample.MainActivity"</span>
+
+    <span class="na">android:gravity=</span><span class="s">"center"</span>
+
+    <span class="na">android:background=</span><span class="s">"@android:color/black"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;EditText</span>
+
+        <span class="na">android:id=</span><span class="s">"@+id/textbox"</span>
+
+        <span class="na">android:layout_width=</span><span class="s">"300dp"</span>
+
+        <span class="na">android:layout_height=</span><span class="s">"50dp"</span>
+
+       <span class="na">android:background=</span><span class="s">"@android:color/white"</span>
+
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/RelativeLayout&gt;</span>
+</code></pre></div>
+<p>Now that we have something useful on screen, let’s run the application again and test it out.  Click on the text box and enter in some text. It appears to be working right? Not so fast, let’s see what happens to our text when we rotate the device. Test it out… Poof, your text vanished like Rob Stark during the Red Wedding. So what happened? What evil force stole your text? Any guesses? And no it wasn’t the blood magic of the Red Woman. Instead, your text is no longer alive (in memory) because the Activity that it lived in is no longer alive. But how can the Activity no longer be alive? I can see it on screen with my own two eyes. The reason my friends, is because of the Activity’s life cycle. Every time an Activity is rotated it is destroyed and created again. So any data that was living in the previous activity is destroyed when a call to <code>onDestroy()</code> is made by the application. Still don’t believe me? Test it out. Override the <code>onDestroy()</code> method and add a log message to the debug log, and while we are at it let’s also add a log message to the <code>onCreate()</code> method. Like so.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+    <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"What is dead may never die."</span><span class="o">;</span>
+    <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"Debug: "</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onDestroy</span><span class="o">()</span>
+<span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onDestroy</span><span class="o">();</span>
+    <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"To be called or not to be called, that is the question."</span><span class="o">;</span>
+    <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"Debug: "</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Run the application again and rotate the device. Now, if you inspect the Debug log, you will see your messages in the following order: your create message, followed by your destroy message, followed lastly by your create message again. This is because the activity is being created when it first loads, destroyed when the screen is rotated and recreated when the device has finished rotating.</p>
+
+<p>So how do you persist the data during a rotation? The answer to that also lies in an Activity’s life cycle, but requires a bit of work. The keys are a few of the other life cycle methods, <code>onPause()</code> and <code>onResume()</code>. <code>onPause()</code> is called every time an Activity goes out of scope. So anytime an activity gets removed from the view of a user <code>onPause()</code> is called.  <code>onResume()</code> is called anytime an Activity comes back into scope, it is also called immediately after a call to <code>onCreate()</code>. But just knowing that <code>onPause()</code> and <code>onResume()</code> exists is not enough. You need to know how to use it properly in order to persist data.  The quick and dirty way of achieving our goal is simply to write our text to a file in <code>onPause()</code> and load the data from file in <code>onResume()</code>. Here is an example of how to accomplish this. Keep in mind that this is the <em>wrong</em> way of doing this in a proper application. Instead, you would want to use an MVC architecture and store all of the data applicable to your application in a model when the Activity is destroyed and then simply reference that model when the Activity is re-created. This will save you a lot of overhead because you will not have to write to file every time an Activity goes out of scope.  But using a model is an entirely other topic itself, so we will stick to the quick and dirty way for this example.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPause</span><span class="o">()</span>
+<span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onPause</span><span class="o">();</span>
+    <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"Stop... hammer time"</span><span class="o">;</span>
+    <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="s">"Debug: "</span><span class="o">,</span> <span class="n">message</span><span class="o">);</span>
+
+    <span class="c1">//Get the current message</span>
+    <span class="n">String</span> <span class="n">currentMessage</span> <span class="o">=</span> <span class="o">((</span><span class="n">EditText</span><span class="o">)(</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textbox</span><span class="o">))).</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+
+    <span class="c1">//Save the data in the text box to file</span>
+    <span class="k">try</span>
+    <span class="o">{</span>
+        <span class="n">OutputStreamWriter</span> <span class="n">fileWriter</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OutputStreamWriter</span><span class="o">(</span><span class="n">getBaseContext</span><span class="o">().</span><span class="na">openFileOutput</span><span class="o">(</span><span class="s">"data.txt"</span><span class="o">,</span> <span class="n">Context</span><span class="o">.</span><span class="na">MODE_PRIVATE</span><span class="o">));</span>
+        <span class="n">fileWriter</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">currentMessage</span><span class="o">);</span>
+        <span class="n">fileWriter</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="s">"File Save"</span><span class="o">,</span> <span class="s">"Could not write to the following file: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="nd">@Override</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">()</span>
+<span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
+
+    <span class="n">String</span> <span class="n">data</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+
+    <span class="c1">//Load the data from file</span>
+    <span class="k">try</span>
+    <span class="o">{</span>
+        <span class="n">InputStream</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="n">openFileInput</span><span class="o">(</span><span class="s">"data.txt"</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">inputStream</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">InputStreamReader</span> <span class="n">fileInputReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+            <span class="n">BufferedReader</span> <span class="n">bufferedFileReader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="n">fileInputReader</span><span class="o">);</span>
+            <span class="n">String</span> <span class="n">receiveString</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+            <span class="n">StringBuilder</span> <span class="n">stringBuilder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+
+            <span class="k">while</span> <span class="o">((</span><span class="n">receiveString</span> <span class="o">=</span> <span class="n">bufferedFileReader</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+            <span class="o">{</span>
+             <span class="n">stringBuilder</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">receiveString</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="n">inputStream</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">stringBuilder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">e</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="s">"File Loader"</span><span class="o">,</span> <span class="s">"Could not find the file: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="s">"File Loader"</span><span class="o">,</span> <span class="s">"Can not read file: "</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+    <span class="c1">//write the message back into the text box</span>
+    <span class="n">EditText</span> <span class="n">textBox</span> <span class="o">=</span> <span class="o">(</span><span class="n">EditText</span><span class="o">)(</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">textbox</span><span class="o">));</span>
+    <span class="n">textBox</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">data</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">(),</span> <span class="mi">0</span><span class="o">,</span> <span class="n">data</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">().</span><span class="na">length</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Congratulations! Your text now persists through device rotation. At this point you are probably despising Android. I mean how can something so simple be so difficult? Well my friends, it’s not. I’m going to fill you in on a little secret and you are probably going to hate me after having done all that file work. Go ahead and comment out the <code>onPause()</code> and <code>onResume()</code> methods and add the following line of code to the EditText attribute in <code>activity_main.xml</code>.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml">android:freezesText="true"
+</code></pre></div>
+<p>Now run your application again and test out rotation. See, I told you that you were going to hate me. So if you could fix this problem with one line of code why did I walk you through this long painful example of using the Activity’s life cycle methods to preserve the text?  The reason is so I could fill you with knowledge about life, well knowledge about life cycle that is.  Anyone who is aspiring to become an Android developer needs to understand an Activity’s life cycle like the back of their hand, and there is no better way of engraining this into your mind then by making you suffer through a long tedious solution to a simple problem.</p>
+
+<p>Now that you have been painfully introduced to an Activity and it life cycle let’s go-ahead flip the script a little bit and discuss iOS View Controllers.</p>
+
+<h4 id="view-controllers">View Controllers:</h4>
+
+<p>A <a href="https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/index.html-//apple_ref/doc/uid/TP40007457-CH2-SW1">View Controller</a> and an Activity are similar in many ways but have a few key differences. Similar to an Activity, a View Controller is the controller in the MVC architecture. View Controllers are also similar to Activities in the sense that every application must have at least one View Controller and pretty much every application has more than one. The general rule with iOS applications is that every separate screen that is presented to a user should have its own View Controller.  The reason for this is because Apple strongly suggests that all applications developed for iOS should follow the MVC architecture. Typically a View Controller manages one view (and all of it’s subviews) associated with it that it uses to display and receive information from the user. Similar to Activities, View Controllers also have a life cycle. However, it does differ slightly from that of an Activity. A View Controller has the following life cycle methods, <code>loadView()</code>, <code>viewDidLoad()</code>, <code>viewWillAppear()</code>, <code>viewDidAppear()</code>, <code>viewWillDisappear()</code>, and <code>viewDidDisappear()</code>.  So now that you have had a little background on what a View Controller is, let’s jump into another example doing the same thing we did earlier with our Activity example.</p>
+
+<p>First let’s start by creating a new Single View Application project in Xcode and selecting Swift as the language. You can set the product name as whatever you like, but for my example I am going to use the name ViewControllerExample. Now that we have a new project up and running let’s get rid of all of the storyboard files. For now, we will define our layout programmatically to better understand how the ViewController works. Go ahead and delete the <code>Main.storyboard</code> and the <code>LaunchScreen.storyboard</code> files. Make sure that you select the “remove reference” option for both of these files. After that open up <code>Info.plist</code> and delete the key-value pairs for both the “Launch screen interface file base name” and the “Main storyboard file base name”.  Go ahead and run the project. You should see a black screen. If your program crashed go back and make sure that you deleted all of the correct files and key-values from the <code>Info.plist</code>. Now that we have set up our project it’s time to add a text box to the center of our screen. But before we add a text box to our screen we need to set up our window in the App Delegate. The App Delegate is similar to a Main Activity in Android because it is essentially the control center for the application, it is responsible for setting up the application on launch and taking care of application clean up when it enters the background or is destroyed.  Navigate to <code>AppDelegate.swift</code> and add the following code to <code>application(application:didFinishLaunchingWithOptions:)</code></p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="nv">application</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="n">didFinishLaunchingWithOptions</span> <span class="nv">launchOptions</span><span class="p">:</span> <span class="p">[</span><span class="kt">NSObject</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span>
+<span class="p">{</span>
+        <span class="c1">//Make the view Controller</span>
+        <span class="k">let</span> <span class="nv">viewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="o">=</span> <span class="kt">ViewController</span><span class="p">()</span>
+        <span class="n">viewController</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">blackColor</span><span class="p">()</span>
+
+        <span class="c1">//Set up the window</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="kt">UIWindow</span><span class="p">()</span>
+        <span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="n">rootViewController</span> <span class="o">=</span> <span class="n">viewController</span>
+        <span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="nf">makeKeyAndVisible</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now run your application again. You should still see a black screen. But don’t worry we are getting close to having our text box up and running. Now navigate to <code>ViewContoller.swift</code> and modify <code>viewDidLoad()</code> like so,</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+        <span class="k">let</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span>  <span class="o">=</span> <span class="kt">UITextField</span><span class="p">()</span>
+        <span class="n">textField</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">((</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">20</span><span class="p">),</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="n">textField</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">whiteColor</span><span class="p">()</span>
+        <span class="n">view</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">textField</span><span class="p">)</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>Now note that we could have put this same code in <code>viewWillAppear()</code> or <code>viewDidAppear()</code> and it would have worked just fine for this simple example. The only difference is that <code>viewDidLoad()</code> is called once after the view controller’s view has been created, and the appear methods are called every time the view controller becomes visible. If we were to add the view in either appear method, a new view would be added every time the view controller became visible (after navigating back from a subsequent screen, for example), which is not what we want because it is extremely inefficient. However, once again keep in mind that even using <code>viewDidLoad()</code> is not the proper way of setting up a view for an iOS application. In a real application you should create your own custom view and add a UITextField to that view and then use <code>loadView()</code> in the ViewController class to load in your custom view. But for this example we will again stick with the quick and dirty way of doing things.</p>
+
+<p>Run your project again. You should now see a white text box in the center of the screen. Now that we finally have a text box up on screen let’s test it out. Let’s do the same thing that we did earlier with our ActivityExample. Let’s enter some text into the text box and change the device orientation (If you are working on a Mac you can rotate the screen by using holding down the command key and pressing either the right or left arrow keys). But before you actually test this out, what you do you expect to happen? Do you think your text will be deleted like in the Activity Example from earlier? Or do you think it will stick around this time?  Go ahead and run it so you can find out.</p>
+
+<p>Surprise, the text stuck around like leader of the Brotherhood Without Banners after losing his battle with the Hound. So what caused the text to stick around, the Lord of Light? Well not exactly. Android destroys the Activity to allow you to handle changes in configuration (device orientation, device language) and allows you to load a different layout. In iOS on the other hand, you will need to handle those device configuration changes yourself. If you think about it, it’s extremely inefficient to completely destroy and recreate a View Controller every time that a device is rotated. Of course this implementation does still have its downsides. As you will notice the text box is no longer centered in the screen. The reason for this is because it only lays itself out based on its original portrait screen dimensions when it was first drawn.  Orientation changes don’t automatically trigger another layout pass.  So how can we fix this? Do we need to override <code>viewWillDisappear()</code> or <code>viewDidDisappear()</code> similar to what we did in the Activity example above? Unfortunately this will not work because the View Controller never disappears during rotation. In fact these methods are only called when a View Controller’s view disappears from the screen. They do not even get called when the application is destroyed. Instead Apple chose to have a single control center take care the clean up that should happen when an application is destroyed, and that control center is AppDelegate.  So any calls to file saving methods should be called in the AppDelegate method <code>applicationWillTerminate()</code> rather than in a specific View Controller. So how can we reposition our text box if none of the View Controller’s life cycle methods are called during rotation? Well believe it or not Apple realized this problem and provided us with the method <code>viewWillLayoutSubviews()</code>. To fix this issue elevate textField to an instance variable and add the following code to ViewController.swift</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewWillLayoutSubviews</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="n">textField</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">((</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">20</span><span class="p">),</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>There, now we have a text box with the correct text located in the center of the screen. But the one thing that I’m sure some of you realized is that we are redrawing the text box on the screen. So won’t this perform just as poorly as the Android implementation of <code>onDestroy()</code>? The answer is sort of. It does have to redraw the view, but it doesn’t have to actually kill the View Controller and re create it like we did in the Activity example above. So for that reason it performs better than the Activity implementation that Google chose.</p>
+
+<h4 id="summary">Summary</h4>
+
+<p>Both examples have their drawbacks and you can see the pros and cons of developing this simple application on both platforms.  I’m sure that by now you can start to see how the iOS vs Android battle can become a heated debate pretty quickly because they do similar things but in different fashions. During the remainder of this series I will cover a number of other differences between the two platforms and help you make an informed decision on which platform you think is better. So don’t worry, if you haven’t already picked a side in the Android vs. iOS battle there is still plenty of time left. After all, the Battle of the bOStards is just beginning.</p>
+
+<p>Also keep in mind that there are a number of other differences between Activities and View Controllers, but for the sake of your time and mine I choose to keep this article fairly short and straightforward. If you want to learn more about the differences between the two, check out the official documentation provided by Google and Apple by using the following links.</p>
+
+<ul>
+<li>Activities: <a href="https://developer.android.com/guide/components/activities.html">https://developer.android.com/guide/components/activities.html</a></li>
+<li>View Controllers: <a href="https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/index.html-//apple_ref/doc/uid/TP40007457-CH2-SW1">https://developer.apple.com/library/ios/featuredarticles/ViewControllerPGforiPhoneOS/index.html-//apple_ref/doc/uid/TP40007457-CH2-SW1</a></li>
+</ul>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

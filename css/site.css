@@ -1,0 +1,183 @@
+.blur {
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+}
+.logo {
+  width: 150px;
+  height: auto;
+}
+
+#tell-more {
+  padding-bottom: 75px;
+}
+#contact-form {
+  width: 100%;
+  height: auto;
+  padding: 0;
+  color: #000;
+}
+#contact-form .panel {
+  border: none;
+  border-radius: 2px;
+  padding: 0;
+}
+#contact-form .panel-heading {
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+}
+#contact-form .panel-body {
+  padding: 0;
+  border-radius: 2px;
+}
+#contact-form .form-control {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #d3d3d3;
+}
+#contact-form .btn {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+
+.navbar-toggle {
+    margin-top: 20px;
+}
+
+.navbar-btn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.btn-circle {
+    margin-right: 10px;
+}
+
+.nav > li > .btn-circle {
+    width: 50px;
+    height: 50px;
+    line-height: 49px;
+    padding:0;
+    border-radius: 50%;
+    font-size: 30px;
+}
+
+.nav li a.fa {
+    letter-spacing: -1px;
+}
+
+.navbar-default .navbar-nav>.active>a.btn-success,
+.navbar-default .navbar-nav>.active>a:hover.btn-success {
+    color: #40A33C;
+    background-color: transparent;
+    border-color: #40A33C;
+}
+
+.nav li a:hover.btn-success, .nav li a:focus.btn-success {
+    color: #40A33C;
+    border-color: #40A33C;
+}
+
+.nav li a:hover.btn-info, .nav li a:focus.btn-info, .nav li a.hovered.btn-info {
+    color: #00a9eb;
+    background-color: transparent;
+}
+
+#successContactModal button.close{
+    color: #000000;
+}
+
+.btn-success {
+    border-color: #40A33C;
+    background-color: #4AAF46;
+}
+
+.btn.btn-circle.btn-success.page-scroll {
+    font-size: 25px;
+}
+
+@media (min-width: 320px) {
+    .nav > li > .btn-circle {
+        display: none;
+    }
+    .nav > li > .navbar-btn {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-nav .navbar-header {
+        background-color: white;
+    }
+
+    .header-nav .navbar-toggle {
+        background-color: #313131;
+        border: 1px #313131 solid;
+    }
+
+    .header-nav .navbar-toggle:hover,
+    .header-nav .navbar-toggle:active,
+    .header-nav .navbar-toggle:visited,
+    .header-nav .navbar-toggle:focus {
+        background-color: #313131;
+        border: 1px #313131 solid;
+    }
+}
+
+@media (min-width: 768px){
+    .nav > li > .btn-circle {
+        display: block;
+    }
+    .nav > li > .navbar-btn {
+        display: none;
+    }
+    .navbar-nav.navbar-right:last-child {
+        margin-right: 15px;
+    }
+    .navbar-right {
+        margin-top: 10px;
+    }
+    .nav.navbar-left {
+        margin-top: 7px;
+    }
+
+    .header-nav .navbar-default .nav li a {
+        color: #999;
+    }
+    .header-nav .navbar-default .nav li a:hover {
+        color: #313131;
+    }
+    .header-nav .navbar-default .nav li a:active {
+        color: #313131;
+    }
+
+    /*Center the nav buttons*/
+    .navbar-collapse {
+        text-align:center;
+    }
+    .navbar-nav {
+        display:inline-block;
+        float:none;
+    }
+
+}
+
+@media (max-width: 1024px){
+    .nav li a.page-scroll {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .nav > li > .btn-circle {
+        display: none;
+    }
+    .nav > li > .navbar-btn {
+        display: block;
+    }
+    .navbar-right {
+        margin-top: 0;
+    }
+}

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Let's Code: Reduce, Reuse, RecyclerView</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-06-10/reduce-reuse-recyclerview/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Let's Code: Reduce, Reuse, RecyclerView</h1>
+    <p class="post-meta">
+      Calvin Kern • <span class="date">Jun 10, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>If you’re still using <a href="https://developer.android.com/reference/android/widget/ListView.html">ListView</a> in Android, boy have I got a treat for you! Today, I wanted to talk about one of my favorite UI components in the Android SDK, <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html">RecyclerView</a>, which is basically a ListView. RecyclerView is used to display rows (or grids) of items to the end user from some dataset. Built in to the RecyclerView are animations for adding, deleting, and moving items in the list, so we get all of that material design goodness with some simple API calls.</p>
+
+<p>The main difference between a RecyclerView and a List View is the use of the view holder design pattern. This pattern makes use of view holders which bind their data into &#39;recyclable&#39; views. A view becomes &#39;recycled&#39; when it is scrolled off screen and will try to be used again by another view holder such that only the views that ever need to be on screen are created. This helps to improve the efficiency of your application, especially when scrolling in the RecyclerView. A view holder class also holds onto references for the views that it will bind data to later. This is a performance boost the RecyclerView offers as you won&#39;t need to find the view by id every time you want to update the UI for that view holder.</p>
+
+<p>In this silly little demo, let&#39;s build an app that has a header, a place for a contact image, and then a bunch of information about said contact. We will also be able to add items to the adapter and remove them by receiving clicks in a view holder!</p>
+
+<p>Let&#39;s start with a new project in Android Studio with just a blank activity and xml layout file. There is some setup to get a RecyclerView in and working, but it won&#39;t take us very long. First, let&#39;s fill out the XML file with a simple layout containing our RecyclerView:</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;RelativeLayout</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"match_parent"</span>
+    <span class="nt">&gt;</span>
+    <span class="nt">&lt;android.support.v7.widget.RecyclerView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/recycler"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"match_parent"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/RelativeLayout&gt;</span>
+</code></pre></div>
+<p>Then in the activity, we need to set the layout manager and the adapter of our RecyclerView. Our app doesn&#39;t require much, so we can use a simple <code>LinearLayoutManager</code> to display our rows in a linear fashion.  When creating the layout manager, you can specify whether it should lay out vertically or horizontally, as well as if the order should be reversed (start at the bottom versus the top). Let’s create a bare bones adapter for now with a simple list that maintains all the data to be displayed.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+        <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">activity_main</span><span class="o">);</span>
+
+        <span class="c1">// Get the recycler view and set up the layout manager as well as the adapter</span>
+        <span class="n">RecyclerView</span> <span class="n">recycler</span> <span class="o">=</span> <span class="o">(</span><span class="n">RecyclerView</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">recycler</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">recycler</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">recycler</span><span class="o">.</span><span class="na">setLayoutManager</span><span class="o">(</span><span class="k">new</span> <span class="n">LinearLayoutManager</span><span class="o">(</span><span class="n">MainActivity</span><span class="o">.</span><span class="na">this</span><span class="o">));</span>
+            <span class="n">recycler</span><span class="o">.</span><span class="na">setAdapter</span><span class="o">(</span><span class="k">new</span> <span class="n">MainRecyclerAdapter</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainRecyclerAdapter</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">Adapter</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">mInfoStrings</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">MainRecyclerAdapter</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">mInfoStrings</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="nf">onCreateViewHolder</span><span class="o">(</span><span class="n">ViewGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="kt">int</span> <span class="n">viewType</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onBindViewHolder</span><span class="o">(</span><span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="n">holder</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getItemCount</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">mInfoStrings</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="c1">// 2 = Header + Contact</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Next, let&#39;s define some view types in <code>MainRecyclerAdapter</code> to use in our RecyclerView. We will need a view type for the header holder, the contact holder, and the info holder. </p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">HEADER_TYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CONTACT_TYPE</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">INFO_TYPE</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+</code></pre></div>
+<p>In order to really make use of these view types, we also need to override the <code>getItemViewType()</code> method in our adapter. This method will be used to determine which view type is at some position, and can help us when binding data to our view holders a little later on.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getItemViewType</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">HEADER_TYPE</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">CONTACT_TYPE</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">INFO_TYPE</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Great! Now that we have the view types supported, let&#39;s define them with some simple layouts xml layouts:</p>
+
+<p><code>holder_header.xml</code></p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;LinearLayout</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:orientation=</span><span class="s">"vertical"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+    <span class="nt">&gt;</span>
+    <span class="nt">&lt;TextView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/holder_header_text_view"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_marginStart=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+        <span class="na">android:layout_marginEnd=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+        <span class="na">android:textSize=</span><span class="s">"@dimen/header_text_size"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/LinearLayout&gt;</span>
+</code></pre></div>
+<p><code>holder_contact.xml</code></p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;RelativeLayout</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+    <span class="nt">&gt;</span>
+    <span class="nt">&lt;ImageView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/holder_contact_image_view"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"@dimen/contact_image_size"</span>
+        <span class="na">android:scaleType=</span><span class="s">"centerCrop"</span>
+        <span class="nt">/&gt;</span>
+    <span class="nt">&lt;TextView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/holder_contact_name_view"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:gravity=</span><span class="s">"center_horizontal"</span>
+        <span class="na">android:layout_alignParentBottom=</span><span class="s">"true"</span>
+        <span class="na">android:textSize=</span><span class="s">"@dimen/contact_name_text_size"</span>
+        <span class="na">android:textColor=</span><span class="s">"@color/white"</span>
+        <span class="na">android:background=</span><span class="s">"@drawable/black_bottom_gradient"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/RelativeLayout&gt;</span>
+</code></pre></div>
+<p><code>holder_info.xml</code></p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;RelativeLayout</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+    <span class="nt">&gt;</span>
+    <span class="nt">&lt;TextView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/holder_info_text_view"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_marginStart=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+        <span class="na">android:layout_toStartOf=</span><span class="s">"@+id/holder_info_delete"</span>
+        <span class="na">android:layout_centerVertical=</span><span class="s">"true"</span>
+        <span class="nt">/&gt;</span>
+    <span class="nt">&lt;ImageView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/holder_info_delete"</span>
+        <span class="na">android:layout_width=</span><span class="s">"@dimen/min_touch_size"</span>
+        <span class="na">android:layout_height=</span><span class="s">"@dimen/min_touch_size"</span>
+        <span class="na">android:layout_marginEnd=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+        <span class="na">android:layout_alignParentEnd=</span><span class="s">"true"</span>
+        <span class="na">android:src=</span><span class="s">"@android:drawable/ic_menu_delete"</span>
+        <span class="na">android:background=</span><span class="s">"?attr/selectableItemBackground"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/RelativeLayout&gt;</span>
+</code></pre></div>
+<p>Back in <code>MainActivity.java</code>, lets define some classes for our view holders. </p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">AppCompatActivity</span> <span class="o">{</span>
+    <span class="c1">//...</span>
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">HeaderViewHolder</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="n">TextView</span> <span class="n">mHeaderTextView</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">HeaderViewHolder</span><span class="o">(</span><span class="n">View</span> <span class="n">itemView</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">itemView</span><span class="o">);</span>
+
+            <span class="n">mHeaderTextView</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">itemView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">holder_header_text_view</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ContactViewHolder</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="n">TextView</span> <span class="n">mContactNameView</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">ImageView</span> <span class="n">mContactImageView</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">ContactViewHolder</span><span class="o">(</span><span class="n">View</span> <span class="n">itemView</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">itemView</span><span class="o">);</span>
+
+            <span class="n">mContactNameView</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">itemView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">holder_contact_name_view</span><span class="o">);</span>
+            <span class="n">mContactImageView</span> <span class="o">=</span> <span class="o">(</span><span class="n">ImageView</span><span class="o">)</span> <span class="n">itemView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">holder_contact_image_view</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">InfoViewHolder</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="o">{</span>
+
+        <span class="kd">public</span> <span class="n">View</span> <span class="n">mDeleteView</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">TextView</span> <span class="n">mInfoTextView</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">InfoViewHolder</span><span class="o">(</span><span class="n">View</span> <span class="n">itemView</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">super</span><span class="o">(</span><span class="n">itemView</span><span class="o">);</span>
+
+            <span class="n">mDeleteView</span> <span class="o">=</span> <span class="n">itemView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">holder_info_delete</span><span class="o">);</span>
+            <span class="n">mInfoTextView</span> <span class="o">=</span> <span class="o">(</span><span class="n">TextView</span><span class="o">)</span> <span class="n">itemView</span><span class="o">.</span><span class="na">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">holder_info_text_view</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>One last step to finish the setup of these view holders, we need to actually create them in our adapter&#39;s <code>onCreateViewHolder()</code>! This will be a cinch since we&#39;ve already set up our view types.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="nf">onCreateViewHolder</span><span class="o">(</span><span class="n">ViewGroup</span> <span class="n">parent</span><span class="o">,</span> <span class="kt">int</span> <span class="n">viewType</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">LayoutInflater</span> <span class="n">inflater</span> <span class="o">=</span> <span class="n">LayoutInflater</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">parent</span><span class="o">.</span><span class="na">getContext</span><span class="o">());</span>
+
+    <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="n">holder</span><span class="o">;</span> <span class="c1">// Declare the ViewHolder to initialize later</span>
+    <span class="k">switch</span> <span class="o">(</span><span class="n">viewType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nl">HEADER_TYPE:</span> <span class="o">{</span>
+            <span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HeaderViewHolder</span><span class="o">(</span><span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">holder_header</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">case</span> <span class="nl">CONTACT_TYPE:</span> <span class="o">{</span>
+            <span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ContactViewHolder</span><span class="o">(</span><span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">holder_contact</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">case</span> <span class="nl">INFO_TYPE:</span>
+            <span class="c1">// Intentional overflow</span>
+        <span class="k">default</span><span class="o">:</span> <span class="o">{</span>
+            <span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InfoViewHolder</span><span class="o">(</span><span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">holder_info</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">holder</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Now we&#39;re finally ready to fill in the method <code>onBindViewHolder()</code> in our <code>MainRecyclerAdapter</code>. This method is responsible for updating the view holder’s UI components will the data that we need. By having public variables in our view holders, our adapter can directly control what those values display. Let&#39;s go ahead and fill in some simple data so we can actually see something when we build the app. Notice the use of <code>getItemViewType()</code> here which we wrote earlier to help us determine which view holder type we are trying to bind data to.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onBindViewHolder</span><span class="o">(</span><span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="n">holder</span><span class="o">,</span> <span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">switch</span> <span class="o">(</span><span class="n">getItemViewType</span><span class="o">(</span><span class="n">position</span><span class="o">))</span> <span class="o">{</span>
+        <span class="k">case</span> <span class="nl">HEADER_TYPE:</span> <span class="o">{</span>
+            <span class="o">((</span><span class="n">HeaderViewHolder</span><span class="o">)</span> <span class="n">holder</span><span class="o">).</span><span class="na">mHeaderTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">"This is a title!"</span><span class="o">);</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">case</span> <span class="nl">CONTACT_TYPE:</span> <span class="o">{</span>
+            <span class="o">((</span><span class="n">ContactViewHolder</span><span class="o">)</span> <span class="n">holder</span><span class="o">).</span><span class="na">mContactNameView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">"Person Name"</span><span class="o">);</span>
+            <span class="o">((</span><span class="n">ContactViewHolder</span><span class="o">)</span> <span class="n">holder</span><span class="o">).</span><span class="na">mContactImageView</span><span class="o">.</span><span class="na">setImageResource</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">drawable</span><span class="o">.</span><span class="na">background</span><span class="o">);</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">case</span> <span class="nl">INFO_TYPE:</span> <span class="o">{</span>
+    <span class="o">((</span><span class="n">InfoViewHolder</span><span class="o">)</span> <span class="n">holder</span><span class="o">).</span><span class="na">mInfoTextView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">mInfoStrings</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">position</span> <span class="o">-</span> <span class="mi">2</span><span class="o">));</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Of course, we don&#39;t have anything in our list yet so this is what should show up: (depending on the <code>background</code> image you use)</p>
+
+<p><img src="/img/posts/recycler_image_simple.png" alt="alt-text"></p>
+
+<p>All right, now that we have a basic working RecyclerView! Before we go any further, let’s add a method to our <code>MainRecyclerAdapter</code> that lets us insert strings to the dataset. We can make use of the built in insertion animations by using <code>notifyItemInserted()</code> rather than just refreshing the whole list with <code>notifyDataSetChanged()</code>.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">addInfoString</span><span class="o">(</span><span class="n">String</span> <span class="n">info</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">mInfoStrings</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">info</span><span class="o">);</span>
+    <span class="c1">// Notify an insert of the item into the end of the info section</span>
+    <span class="n">notifyItemInserted</span><span class="o">(</span><span class="n">getItemCount</span><span class="o">()</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span> <span class="c1">// 2 = Header + Contact</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Let&#39;s use a <a href="https://material.google.com/components/buttons-floating-action-button.html">Floating Action Button (or FAB)</a> to add info rows to our RecyclerView. Here is the new <code>activity_main.xml</code> that includes our FAB.</p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;RelativeLayout</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"match_parent"</span>
+    <span class="nt">&gt;</span>
+    <span class="nt">&lt;android.support.v7.widget.RecyclerView</span>
+        <span class="na">android:id=</span><span class="s">"@+id/recycler"</span>
+        <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+        <span class="na">android:layout_height=</span><span class="s">"match_parent"</span>
+        <span class="nt">/&gt;</span>
+    <span class="nt">&lt;android.support.design.widget.FloatingActionButton</span>
+        <span class="na">android:layout_width=</span><span class="s">"@dimen/min_touch_size"</span>
+        <span class="na">android:layout_height=</span><span class="s">"@dimen/min_touch_size"</span>
+        <span class="na">android:layout_alignParentBottom=</span><span class="s">"true"</span>
+        <span class="na">android:layout_alignParentEnd=</span><span class="s">"true"</span>
+        <span class="na">android:layout_marginBottom=</span><span class="s">"@dimen/activity_vertical_margin"</span>
+        <span class="na">android:layout_marginEnd=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+        <span class="na">android:onClick=</span><span class="s">"onFabClicked"</span>
+        <span class="na">android:src=</span><span class="s">"@android:mipmap/sym_def_app_icon"</span>
+        <span class="nt">/&gt;</span>
+<span class="nt">&lt;/RelativeLayout&gt;</span>
+</code></pre></div>
+<p>Now that the view is in our layout, let&#39;s hook it up with our <code>MainActivity</code> and make a way to add data to the adapter.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFabClicked</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">RecyclerView</span> <span class="n">recycler</span> <span class="o">=</span> <span class="o">(</span><span class="n">RecyclerView</span><span class="o">)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">recycler</span><span class="o">);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">recycler</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">MainRecyclerAdapter</span> <span class="n">adapter</span> <span class="o">=</span> <span class="o">(</span><span class="n">MainRecyclerAdapter</span><span class="o">)</span> <span class="n">recycler</span><span class="o">.</span><span class="na">getAdapter</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">adapter</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">adapter</span><span class="o">.</span><span class="na">addInfoString</span><span class="o">(</span><span class="s">"Test Info"</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Awesome! Now we have a way to add data to our RecyclerView. However, you may have noticed a problem. When the screen fills up with rows of information, we will have a row at the bottom of the screen that is covered up by our FAB. Oh no! </p>
+
+<p><img src="/img/posts/recycler_image_overlap.png" alt="alt-text"></p>
+
+<p>Don&#39;t worry, we just have to add another view type to our adapter to account for having a FAB at the bottom of the screen.  Let&#39;s just use a Space view for our footer that matches the size of our FAB. This will allow every row to always be visible.</p>
+
+<p><code>holder_footer.xml</code></p>
+<div class="highlight"><pre><code class="language-xml" data-lang="xml"><span class="nt">&lt;Space</span>
+    <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"@dimen/min_touch_size"</span>
+    <span class="na">android:layout_marginBottom=</span><span class="s">"@dimen/activity_vertical_margin"</span>
+    <span class="na">android:layout_marginEnd=</span><span class="s">"@dimen/activity_horizontal_margin"</span>
+    <span class="nt">/&gt;</span>
+</code></pre></div>
+<p>With that xml file defined, a class needs to be defined to hold this view type.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FooterViewHolder</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">FooterViewHolder</span><span class="o">(</span><span class="n">View</span> <span class="n">itemView</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">itemView</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Now, we can create a new view type in our <code>MainRecyclerAdapter</code> to represent this footer view type. Next, let&#39;s update our <code>getItemViewType()</code> method to find which position corresponds to this new type.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">FOOTER_TYPE</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+<span class="c1">//...</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getItemViewType</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// Get the footer position (the last item in the list)</span>
+    <span class="kt">int</span> <span class="n">footerPosition</span> <span class="o">=</span> <span class="n">getItemCount</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+
+    <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">HEADER_TYPE</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">CONTACT_TYPE</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">position</span> <span class="o">==</span> <span class="n">footerPosition</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">FOOTER_TYPE</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">INFO_TYPE</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>We also need to update our <code>onCreateViewHolder()</code> method to create the new footer view type.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="k">case</span> <span class="nl">FOOTER_TYPE:</span> <span class="o">{</span>
+    <span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FooterViewHolder</span><span class="o">(</span><span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">holder_footer</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">));</span>
+    <span class="k">break</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Lastly, we have to account for the size of our <code>MainRecyclerAdapter</code> now that we have a new footer view type.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">getItemCount</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">mInfoStrings</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="c1">// 3 = Header + Contact + Footer</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Perfect.</p>
+
+<p><img src="/img/posts/recycler_image_overlap_fixed.png" alt="alt-text"></p>
+
+<p>To wrap up this demo, we need to set up the delete icons to actually delete that row. We will do this by creating a listener interface in our <code>MainActivity</code> that our adapter will implement. This interface will take in the position that is being clicked so that it can remove the correct data and update the view accordingly.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">OnViewHolderClickedListener</span> <span class="o">{</span>
+    <span class="kt">void</span> <span class="nf">onViewHolderClicked</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>When our <code>MainRecyclerAdapter</code> implements this listener, we again will make use of the built in remove animation that the RecyclerView offers to us. By using <code>notifyItemRemoved()</code>, our RecyclerView cleanly moves all necessary elements and removes the desired element.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainRecyclerAdapter</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">Adapter</span> <span class="kd">implements</span> <span class="n">OnViewHolderClickedListener</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onViewHolderClicked</span><span class="o">(</span><span class="kt">int</span> <span class="n">position</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// Delete the data</span>
+        <span class="n">mInfoStrings</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">position</span> <span class="o">-</span> <span class="mi">2</span><span class="o">);</span> <span class="c1">// minus 2 for the header and contact</span>
+        <span class="n">notifyItemRemoved</span><span class="o">(</span><span class="n">position</span><span class="o">);</span> <span class="c1">// Update UI</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>To hook this into to our <code>InfoViewHolder</code>, we will require this interface type as a parameter in the constructor so that it can report it&#39;s clicks to the adapter. Our <code>InfoViewHolder</code> will also act as the click listener for our delete button so that it can report the it&#39;s position to the interface listener when it needs to be deleted. </p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InfoViewHolder</span> <span class="kd">extends</span> <span class="n">RecyclerView</span><span class="o">.</span><span class="na">ViewHolder</span> <span class="kd">implements</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">View</span> <span class="n">mDeleteView</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">TextView</span> <span class="n">mInfoTextView</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">OnViewHolderClickedListener</span><span class="o">&gt;</span> <span class="n">mClickListener</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">InfoViewHolder</span><span class="o">(</span><span class="n">View</span> <span class="n">itemView</span><span class="o">,</span> <span class="n">OnViewHolderClickedListener</span> <span class="n">listener</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">itemView</span><span class="o">);</span>
+        <span class="c1">//...</span>
+        <span class="n">mDeleteView</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="n">mClickListener</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;&gt;(</span><span class="n">listener</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">mClickListener</span><span class="o">.</span><span class="na">get</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">mClickListener</span><span class="o">.</span><span class="na">get</span><span class="o">().</span><span class="na">onViewHolderClicked</span><span class="o">(</span><span class="n">getAdapterPosition</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>It is important to use a <code>WeakReference</code> to keep hold of the reference to the adapter, so that the reference is not retained longer than the adapter wants to be retained. This prevents retain cycles which can cause memory leaks in our application.</p>
+
+<p>Then we update <code>onCreateViewHolder()</code> to pass the adapter as a listener when creating the <code>InfoViewHolder</code>.</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">holder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InfoViewHolder</span><span class="o">(</span><span class="n">inflater</span><span class="o">.</span><span class="na">inflate</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">holder_info</span><span class="o">,</span> <span class="n">parent</span><span class="o">,</span> <span class="kc">false</span><span class="o">),</span> <span class="k">this</span><span class="o">);</span>
+</code></pre></div>
+<p>And voila, we now have a RecyclerView set up with an adapter where we can add and remove rows <em>and</em> takes into account the space used up by our FAB so that our bottom rows aren&#39;t covered up. By using an interface, we were able to report communication up from a view holder to it&#39;s parent adapter. Using the topics covered here, you should now be able to do just about anything you need with a RecyclerView.</p>
+
+<p>We didn’t cover how to use a <a href="https://developer.android.com/reference/android/support/v7/widget/GridLayoutManager.html">GridLayoutManager</a>, which would make the RecyclerView behave similarly to a <a href="https://developer.android.com/reference/android/widget/GridView.html">GridView</a>. Instead of laying out views in a single file line with the <code>LinearLayoutManager</code>, the manager would layout views in columns to make a grid of view holders. Or, if you really want to get crazy, you could use a <a href="https://developer.android.com/reference/android/support/v7/widget/StaggeredGridLayoutManager.html">StaggeredGridLayoutManager</a>, which will lay views out of varying height in columns to similar to what Pinterest does or the Google Keep app.</p>
+
+<p>Most apps use this view to accomplish varying tasks from simple lists of one view type (like a messages application) to sectionable lists that have many different types. A good example of this is the search in Spotify or Youtube that list different channels, playlists, and single pieces of media in one scrolling list. Typically, the best use case for a RecyclerView over a Scroll View is when the list will be modified while someone is using it. If all the data is static and won&#39;t change, you&#39;ll probably be better off with a Scroll View.</p>
+
+<p>As an extra exercise, try to convert the info view’s TextView into an EditText and store any new data into the adapter. </p>
+
+<p>Check out the final project <a href="https://github.com/CalvinKern/RecyclerViewTest">here</a>.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

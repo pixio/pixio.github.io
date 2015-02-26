@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Wrap Battle: Wrapping C with Swift and Java</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-07-22/wrap-battle-wrapping-c-with-swift-and-java/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Wrap Battle: Wrapping C with Swift and Java</h1>
+    <p class="post-meta">
+      Dave Heyborne • <span class="date">Jul 22, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>There are many situations in which a shared codebase is desirable. Perhaps your project involves a lot of calculations which you want to be carried out by the exact same code on all your platforms to ensure that the results are identical. Maybe you inherited a large C/C++ codebase or rely on a library that needs to work in your iOS or Android apps and rewriting it is not an option. You might simply prefer to write the bulk of your code in a shared language so that you aren&#39;t testing and validating the same functions in two or more languages.</p>
+
+<p>In this article I present two approaches to wrapping the functionality of a C interface in Swift and Java, highlighting what does and does not work well for each language. The techniques presented below are not the only ways to accomplish what I set out to do, but they are the most common wrapping styles I have encountered, which is why I chose them over other approaches. The code I present here is also relatively free of &quot;magic tricks&quot; that optimize the code&#39;s efficiency at the expense of immediate readability, so don&#39;t go and use this code as the basis for your next high-performance math library without refining it a bit.</p>
+
+<p>We have written a lot lately about the design of <a href="http://pixio.com/blog/2016-06-03/c-in-the-21st-century/" title="C in the 21st Century">shared object systems</a> and <a href="http://pixio.com/blog/2016-07-08/how-to-score-big-with-androids-ndk/" title="How to Score Big with Android&#39;s NDK">JNI integration for C on Android</a>, so I won&#39;t re-tread that ground here. If you are curious about how to set up a project in either Android Studio or Xcode to do what I describe in this article, look at those earlier articles and/or feel free to check out the <a href="https://github.com/Dave-Heyborne/WrapBattle" title="WrapBattle GitHub Repository">the example repository</a> for this article. Also, note that the code presented below is a subset of the code in the example repository - many code sections were left out of the article for clarity&#39;s sake.</p>
+
+<h2 id="c-library">C Library</h2>
+
+<p>To get started, I will cover the C library I plan to wrap. First is the &#39;data object&#39; in question - a 3D vector represented as a struct:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">CVector3D</span> <span class="p">{</span>
+    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">y</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">CVector3D</span><span class="p">;</span>
+</code></pre></div>
+<p>This is a very simple struct to use, either by directly instantiating it on the stack or by using a convenience constructor that returns a pointer to a heap-allocated struct:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Stack Construction
+</span><span class="k">const</span> <span class="n">CVector3D</span> <span class="n">vector</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="c1">// Pointer Constructor
+</span><span class="n">__attribute__</span> <span class="p">((</span><span class="n">malloc</span><span class="p">,</span> <span class="n">nothrow</span><span class="p">,</span> <span class="n">returns_nonnull</span><span class="p">,</span> <span class="n">warn_unused_result</span><span class="p">))</span>
+<span class="n">CVector3D</span><span class="o">*</span> <span class="n">CVector3DCreate_P</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">y</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">vector</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">CVector3D</span><span class="p">));</span>
+    <span class="n">vector</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+    <span class="n">vector</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">vector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Pointer Construction
+</span><span class="k">const</span> <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">vectorPointer</span> <span class="o">=</span> <span class="n">CVector3DCreate_P</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+</code></pre></div>
+<p>Once an instance of the struct has been obtained, it can be manipulated with some simple functions (for example, the cross product function):</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// Pass-By-Value Cross Product
+</span><span class="n">__attribute__</span> <span class="p">((</span><span class="k">const</span><span class="p">,</span> <span class="n">nothrow</span><span class="p">,</span> <span class="n">warn_unused_result</span><span class="p">))</span>
+<span class="n">CVector3D</span> <span class="n">CVector3DCrossProduct</span><span class="p">(</span><span class="k">const</span> <span class="n">CVector3D</span> <span class="n">left</span><span class="p">,</span> <span class="k">const</span> <span class="n">CVector3D</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="k">const</span> <span class="n">CVector3D</span><span class="p">){(</span><span class="n">left</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">z</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="p">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">y</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">left</span><span class="p">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">z</span><span class="p">),</span>
+                             <span class="p">(</span><span class="n">left</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="p">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">right</span><span class="p">.</span><span class="n">x</span><span class="p">)};</span>
+<span class="p">}</span>
+
+<span class="c1">// Pass-By-Pointer Cross product
+</span><span class="n">__attribute__</span> <span class="p">((</span><span class="n">malloc</span><span class="p">,</span> <span class="n">nonnull</span><span class="p">,</span> <span class="n">nothrow</span><span class="p">,</span> <span class="n">returns_nonnull</span><span class="p">,</span> <span class="n">warn_unused_result</span><span class="p">))</span>
+<span class="n">CVector3D</span><span class="o">*</span> <span class="n">CVector3DCrossProduct_P</span><span class="p">(</span><span class="k">const</span> <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">left</span><span class="p">,</span> <span class="k">const</span> <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">CVector3D</span><span class="p">));</span>
+    <span class="n">crossProduct</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">);</span>
+    <span class="n">crossProduct</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+    <span class="n">crossProduct</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">*</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">crossProduct</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>All of this should be fairly straightforward. But how can this code be effectively wrapped by Swift and Java for use in mobile applications? Two common approaches to doing this are either making wrapper classes that internally hold a reference to a C struct, or trying to replicate the struct directly in the target language (generally performing a conversion to pass the struct into C functions that expect value parameters). As will be shown below, these techniques differ greatly in how useful and simple they are between Swift and Java.</p>
+
+<h2 id="swift-wrappers">Swift Wrappers</h2>
+
+<p>To start, here are the Swift implementations of each wrapper paradigm, starting with the value wrapper:</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// Value 'Wrapper'</span>
+<span class="kd">extension</span> <span class="kt">CVector3D</span> <span class="p">{</span>    
+    <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">CVector3D</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span> <span class="o">=</span> <span class="kt">CVector3DAdd</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">crossProduct</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">CVector3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CVector3D</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">CVector3DCrossProduct</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Notice that this is, in fact, not a wrapper class at all, but rather an extension on the C struct directly. Because C is (mostly) seamlessly bridged into Swift, it is possible to use non-opaque C structs directly in Swift code as though they were regular Swift structs.</p>
+
+<p>That being said, many libraries manipulate struct instances &quot;by reference&quot; via pointers to heap-allocated memory, rather than by modifying and passing around structs by value. Oftentimes these pointers are also opaque and the struct definition is not visible from the library&#39;s interface, so even if you wanted to use the structs by value in Swift, you couldn&#39;t. Below is the implementation of a Swift class that wraps a pointer to a C vector:</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// Pointer Wrapper</span>
+<span class="kd">final</span> <span class="kd">class</span> <span class="kt">Vector3D</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">reference</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="kt">CVector3D</span><span class="o">&gt;</span>
+
+    <span class="nf">init</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="kt">CDouble</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="kt">CDouble</span><span class="p">,</span> <span class="nv">z</span><span class="p">:</span> <span class="kt">CDouble</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">reference</span> <span class="o">=</span> <span class="kt">CVector3DCreate_P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">(</span><span class="nv">reference</span><span class="p">:</span> <span class="kt">UnsafeMutablePointer</span><span class="o">&lt;</span><span class="kt">CVector3D</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">reference</span> <span class="o">=</span> <span class="n">reference</span>
+    <span class="p">}</span>
+
+    <span class="kd">deinit</span> <span class="p">{</span>
+        <span class="kt">CVector3DDestroy_P</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">x</span><span class="p">:</span> <span class="kt">CDouble</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">x</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">newValue</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">y</span><span class="p">:</span> <span class="kt">CDouble</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">y</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">newValue</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">z</span><span class="p">:</span> <span class="kt">CDouble</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">z</span>
+        <span class="p">}</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="n">reference</span><span class="o">.</span><span class="n">pointee</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">newValue</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">add</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">Vector3D</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">CVector3DAdd_P</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">crossProduct</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">Vector3D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Vector3D</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">Vector3D</span><span class="p">(</span><span class="nv">reference</span><span class="p">:</span> <span class="kt">CVector3DCrossProduct_P</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">reference</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Notice the extra infrastructure above that deals with keeping a reference to a pointer, and the <code>deinit</code> function which ensures that the memory associated with the pointer is freed once the Swift object is deallocated. A private init function is also needed to create new <code>Vector3D</code> wrappers for the return values of C functions that return pointers to new <code>CVector3D</code>s. The struct extension didn&#39;t have to account for manual memory management (because the by-value struct functions don&#39;t allocate heap memory) or wrapping return values, so the wrapper class feels distinctly inferior.</p>
+
+<p>Below are some examples of using each of the above vector implementations:</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">// Value 'Wrapper' Usage</span>
+<span class="k">var</span> <span class="nv">cVector3D</span><span class="p">:</span> <span class="kt">CVector3D</span> <span class="o">=</span> <span class="kt">CVector3D</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">z</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">cVector3D</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">CVector3D</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">z</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">))</span>
+
+<span class="c1">// Pointer Wrapper Usage</span>
+<span class="k">let</span> <span class="nv">vector3D</span><span class="p">:</span> <span class="kt">Vector3D</span> <span class="o">=</span> <span class="kt">Vector3D</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">z</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">vector3D</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="nv">other</span><span class="p">:</span> <span class="kt">Vector3D</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">z</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">))</span>
+</code></pre></div>
+<p>As you can see, both wrapper methods are quite simple and using the resulting implementations feels similar. However, the struct extension is (in my opinion) the clear winner of the two strategies for Swift if the programmer has access to the struct definition. It does not introduce a new type, directly uses the existing C functions with no modification, and doesn&#39;t necessitate any kind of memory management or boxing/unboxing on the part of the implementer.</p>
+
+<h2 id="java-wrappers">Java Wrappers</h2>
+
+<p>Moving on to the Java side, here is the Java implementation of a value wrapper for the <code>CVector3D</code> struct, which tries to get as close as Java allows to having a &quot;struct&quot; (but due to the fact that it is actually a class, it won&#39;t actually work as a struct in Java the way that it does in Swift).</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// 'Value' Wrapper</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Vector3DStruct</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="n">x</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="n">y</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">double</span> <span class="n">z</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Vector3DStruct</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getX</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setX</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getY</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">y</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setY</span><span class="o">(</span><span class="kt">double</span> <span class="n">y</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">getZ</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">z</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setZ</span><span class="o">(</span><span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">Vector3DStruct</span> <span class="n">other</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">Vector3DStruct</span> <span class="nf">crossProduct</span><span class="o">(</span><span class="n">Vector3DStruct</span> <span class="n">other</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Since Java does not natively support C structs, the struct is almost entirely rewritten to support interacting with it as a Java object. Unlike a &quot;real&quot; struct, this Java object will not be treated as a value type, meaning that if one is modified within a function the changes will persist outside the function. The class methods marked with the <code>native</code> keyword are implemented on the C side via the JNI, as shown below:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_pixio_dave_Vectors_Vector3DStruct_add</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span> <span class="k">const</span> <span class="n">env</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">xID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"x"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">yID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">zID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"z"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">xID1</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">yID1</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">z1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">zID1</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">xID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"x"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">yID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">zID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"z"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">xID2</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">y2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">yID2</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">zID2</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">CVector3D</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CVector3DAdd</span><span class="p">((</span><span class="k">const</span> <span class="n">CVector3D</span><span class="p">){</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">},</span> <span class="p">(</span><span class="k">const</span> <span class="n">CVector3D</span><span class="p">){</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">});</span>
+
+    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">xID1</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">yID1</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">zID1</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">JJNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_pixio_dave_Vectors_Vector3DStruct_crossProduct</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span> <span class="k">const</span> <span class="n">env</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">xID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"x"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">yID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">zID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"z"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">xID1</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">yID1</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">z1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">zID1</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">xID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"x"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">yID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">zID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"z"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">xID2</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">y2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">yID2</span><span class="p">);</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetDoubleField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">zID2</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">CVector3D</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CVector3DCrossProduct</span><span class="p">((</span><span class="k">const</span> <span class="n">CVector3D</span><span class="p">){</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z1</span><span class="p">},</span> <span class="p">(</span><span class="k">const</span> <span class="n">CVector3D</span><span class="p">){</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">z2</span><span class="p">});</span>
+
+    <span class="k">const</span> <span class="n">jmethodID</span> <span class="n">constructor</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"&lt;init&gt;"</span><span class="p">,</span> <span class="s">"(DDD)V"</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">y</span><span class="p">,</span> <span class="n">result</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Constructing three new vectors just to add one vector to another is, to put it mildly, not great. While some of the class lookup code could be optimized here, the primary problem is that every time a C pass-by-value function needs to be called on the Java object &quot;struct&quot;&#39;, an actual C struct has to be built from that Java object. While the <code>CVector3D</code> struct may not be complex enough to make this operation prohibitively expensive, a more complicated struct would quickly rule out using the above sort of wrapper due to the incredibly wasteful process of round-tripping a Java object into a C struct and then back into a Java object again. It would be far more efficient to simply rewrite the class in pure Java or rewrite the C functions in the JNI layer rather than do all the boxing and unboxing of C structs shown here.</p>
+
+<p>Here is the way that the pointer/reference wrapper class is implemented in Java:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// Pointer Wrapper</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Vector3DPointer</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">reference</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Vector3DPointer</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">reference</span> <span class="o">=</span> <span class="n">Vector3DPointer</span><span class="o">.</span><span class="na">createReference</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="nf">Vector3DPointer</span><span class="o">(</span><span class="kt">long</span> <span class="n">reference</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">reference</span> <span class="o">=</span> <span class="n">reference</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">finalize</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">Throwable</span> <span class="o">{</span>
+        <span class="n">Vector3DPointer</span><span class="o">.</span><span class="na">destroyReference</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">reference</span><span class="o">);</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">finalize</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">double</span> <span class="nf">getX</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">setX</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">double</span> <span class="nf">getY</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">setY</span><span class="o">(</span><span class="kt">double</span> <span class="n">y</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">double</span> <span class="nf">getZ</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">setZ</span><span class="o">(</span><span class="kt">double</span> <span class="n">z</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="n">Vector3DPointer</span> <span class="n">other</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">native</span> <span class="n">Vector3DPointer</span> <span class="nf">crossProduct</span><span class="o">(</span><span class="n">Vector3DPointer</span> <span class="n">other</span><span class="o">);</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">long</span> <span class="nf">createReference</span><span class="o">(</span><span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">,</span> <span class="kt">double</span> <span class="n">z</span><span class="o">);</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">native</span> <span class="kt">void</span> <span class="nf">destroyReference</span><span class="o">(</span><span class="kt">long</span> <span class="n">reference</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>This wrapper class looks quite similar to the Swift pointer wrapper class, and behaves similarly. A pointer is stored internally as a <code>long</code>, and the Java object&#39;s <code>finalize()</code> method ensures that the memory associated with the pointer is freed when the Java object is about to be deallocated. Here are some of the JNI functions that back the native calls in the class above:</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_pixio_dave_Vectors_Vector3DPointer_setX</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span> <span class="k">const</span> <span class="n">env</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="k">const</span> <span class="n">jdouble</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">referenceID</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D</span><span class="p">,</span> <span class="s">"reference"</span><span class="p">,</span> <span class="s">"J"</span><span class="p">);</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">reference</span> <span class="o">=</span> <span class="p">(</span><span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetLongField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">referenceID</span><span class="p">));</span>
+
+    <span class="n">reference</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_pixio_dave_Vectors_Vector3DPointer_add</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span> <span class="k">const</span> <span class="n">env</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">referenceID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"reference"</span><span class="p">,</span> <span class="s">"J"</span><span class="p">);</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">reference1</span> <span class="o">=</span> <span class="p">(</span><span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetLongField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">referenceID1</span><span class="p">));</span>
+
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">referenceID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"reference"</span><span class="p">,</span> <span class="s">"J"</span><span class="p">);</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">reference2</span> <span class="o">=</span> <span class="p">(</span><span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetLongField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">referenceID2</span><span class="p">));</span>
+
+    <span class="n">CVector3DAdd_P</span><span class="p">(</span><span class="n">reference1</span><span class="p">,</span> <span class="n">reference2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">JNIEXPORT</span> <span class="n">jobject</span> <span class="n">JNICALL</span>
+<span class="nf">Java_com_pixio_dave_Vectors_Vector3DPointer_crossProduct</span><span class="p">(</span><span class="n">JNIEnv</span><span class="o">*</span> <span class="k">const</span> <span class="n">env</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">instance</span><span class="p">,</span> <span class="k">const</span> <span class="n">jobject</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">referenceID1</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"reference"</span><span class="p">,</span> <span class="s">"J"</span><span class="p">);</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">reference1</span> <span class="o">=</span> <span class="p">(</span><span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetLongField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">referenceID1</span><span class="p">));</span>
+
+    <span class="k">const</span> <span class="n">jclass</span> <span class="n">Vector3D2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetObjectClass</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">);</span>
+    <span class="k">const</span> <span class="n">jfieldID</span> <span class="n">referenceID2</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFieldID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D2</span><span class="p">,</span> <span class="s">"reference"</span><span class="p">,</span> <span class="s">"J"</span><span class="p">);</span>
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">reference2</span> <span class="o">=</span> <span class="p">(</span><span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span><span class="p">)((</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetLongField</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">referenceID2</span><span class="p">));</span>
+
+    <span class="n">CVector3D</span><span class="o">*</span> <span class="k">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CVector3DCrossProduct_P</span><span class="p">(</span><span class="n">reference1</span><span class="p">,</span> <span class="n">reference2</span><span class="p">);</span>
+
+    <span class="k">const</span> <span class="n">jmethodID</span> <span class="n">constructor</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetMethodID</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="s">"&lt;init&gt;"</span><span class="p">,</span> <span class="s">"(J)V"</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">env</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NewObject</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">Vector3D1</span><span class="p">,</span> <span class="n">constructor</span><span class="p">,</span> <span class="p">(</span><span class="n">jlong</span><span class="p">)</span><span class="n">result</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The JNI pass-by-pointer methods essentially just have to obtain the pointers from the Java object and then call the C pass-by-pointer functions to carry out their work. Because the Java object here only holds a pointer to the struct rather than the data of the struct itself, changes to the struct can be carried out much more easily and without making the redundant copies seen in the pass-by-value approach. To more directly compare the pass-by-value and pass-by-pointer approaches for Java, look at the following excerpts from the JNI methods below:</p>
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">// Critical Section of Pass-By-Value JNI Method</span>
+<span class="kd">const</span> <span class="n">CVector3D</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CVector3DCrossProduct</span><span class="o">((</span><span class="kd">const</span> <span class="n">CVector3D</span><span class="o">){</span><span class="n">x1</span><span class="o">,</span> <span class="n">y1</span><span class="o">,</span> <span class="n">z1</span><span class="o">},</span> <span class="o">(</span><span class="kd">const</span> <span class="n">CVector3D</span><span class="o">){</span><span class="n">x2</span><span class="o">,</span> <span class="n">y2</span><span class="o">,</span> <span class="n">z2</span><span class="o">});</span>
+
+<span class="c1">// Critical Section of Pass-By-Pointer JNI Method</span>
+<span class="n">CVector3D</span><span class="o">*</span> <span class="kd">const</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CVector3DCrossProduct_P</span><span class="o">(</span><span class="n">reference1</span><span class="o">,</span> <span class="n">reference2</span><span class="o">);</span>
+</code></pre></div>
+<p>Again, notice that the pass-by-value function is rebuilding C structs to pass them into the C function, while the pass-by-pointer function only passes in pointer values. While in this example a 3-element struct might not be far worse than a pointer in terms of overhead, it should be easy to imagine how awful the pass-by-value approach could become as the number and complexity of items in the struct increased. No matter how complicated the struct became, the pass-by-pointer approach is only going to pass a single pointer.</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>As I mentioned before, the examples above are not the only way of wrapping C structs and their functionality in Swift or Java. However, even these two examples clearly show that the optimal process is significantly different between those two languages. Even if the above code were carefully optimized, my preference for how to wrap C on the Swift side would differ from my preference on the Java side. Swift&#39;s support for C structs natively makes it almost a no-brainer to use the structs by value and add capabilities via extensions (unless pass-by-reference behavior is desired on the Swift side). In fact, Apple has been doing exactly this to enhance their C APIs for use with Swift. Java&#39;s lack of such support means that wrapping a pointer in a Java class ends up being much cleaner, as it does not require a lot of reimplementation of object structure on the Java side.</p>
+
+<p>While wrapping C on either Swift or Java is relatively straightforward, wrapping the same C code in Swift AND Java simultaneously takes a lot more effort. The pointer wrapper approach is generally the superior option of the two I have presented if both Swift and Java require support, because the value wrapper approach can quickly become prohibitively inefficient on the Java side. An even better option, assuming that total control of the C codebase is possible, is to engineer the C library in such a way that Swift and Java tie-ins are part of the design from the start. The C code in this article was deliberately designed to implement two different versions of the same functionality - in reality, one of those sets of functions (pass-by-value or pass-by-pointer) could have been reworked to depend on the other to reduce duplication, and the way the data was being manipulated could have been designed in a more Java-friendly way. These sorts of optimizations are best suited to a future article, but are important to mention, and to consider if you decide to start implementing a shared library.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

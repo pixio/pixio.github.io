@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>An Introduction to Promises</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2014-06-25/an-introduction-to-promises/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">An Introduction to Promises</h1>
+    <p class="post-meta">
+      Spencer Phippen • <span class="date">Jun 25, 2014</span>
+    </p>
+    
+    <p><img src="/img/posts/13903385550_62b8ac45c4_o-300x200.jpg" alt/></p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>I recently wrote some node.js code (for a <a href="https://www.parse.com/">Parse</a> back-end), and came across a library feature called &quot;promises&quot;. I was surprised at how enjoyable they were to code with, so I decided to write a blog post about what they&#39;re good for and how to use them.</p>
+
+<p>So here we are.</p>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Before getting into the details, let&#39;s look at an example application in Objective-C.</p>
+
+<p>On a recent project, I was writing code for a messaging application that did something like the following:</p>
+
+<ul>
+<li>Look up the number of messages that user A has not read</li>
+<li>Look up the user details of a person sending a message to user A</li>
+<li>Send a push notification about unread messages to user A</li>
+</ul>
+
+<p>Note that the first two steps should be executed concurrently, but the third cannot start until both of the earlier ones finish.</p>
+
+<p>With callbacks, the code probably looks something like this:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">sendPushForRecipient</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">recipientId</span> <span class="nf">fromSender</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">senderId</span>
+<span class="p">{</span>
+  <span class="n">__block</span> <span class="n">NSDictionary</span><span class="o">*</span> <span class="n">userData</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+  <span class="n">__block</span> <span class="n">NSNumber</span><span class="o">*</span> <span class="n">unreadCount</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+  <span class="n">__block</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="k">continue</span><span class="p">)</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+  <span class="p">[</span><span class="n">PIXNetwork</span> <span class="nf">getUserDataForId</span><span class="p">:</span><span class="n">senderId</span> <span class="nf">withCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">userData</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">userData</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="o">&amp;&amp;</span> <span class="n">unreadCount</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span>
+        <span class="k">continue</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}];</span>
+
+  <span class="p">[</span><span class="n">PIXNetwork</span> <span class="nf">unreadCountForUserId</span><span class="p">:</span><span class="n">recipientId</span> <span class="nf">withCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSNumber</span><span class="o">*</span> <span class="n">count</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">unreadCount</span> <span class="o">=</span> <span class="n">count</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">userData</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="o">&amp;&amp;</span> <span class="n">unreadCount</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span>
+        <span class="k">continue</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}];</span>
+
+  <span class="k">continue</span> <span class="o">=</span> <span class="o">^</span><span class="p">{</span>
+    <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+      <span class="n">NSString</span><span class="o">*</span> <span class="n">userName</span> <span class="o">=</span> <span class="p">[</span><span class="n">userData</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="s">@"userName"</span><span class="p">];</span>
+      <span class="n">NSString</span><span class="o">*</span> <span class="n">pushMessage</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%@ sent you a message (%@)"</span><span class="p">,</span> <span class="n">userName</span><span class="p">,</span> <span class="n">unreadCount</span><span class="p">];</span>
+      <span class="p">[</span><span class="n">PIXPush</span> <span class="nf">sendPushToUser</span><span class="p">:</span><span class="n">recipientId</span> <span class="nf">withMessage</span><span class="p">:</span><span class="n">pushMessage</span> <span class="n">withCompletion</span><span class="o">:^</span><span class="p">(</span><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span>
+          <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+      <span class="p">}];</span>
+    <span class="p">});</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="the-promise-transformation">The Promise Transformation</h2>
+
+<p>If we rewrote this code using the <a href="https://github.com/couchdeveloper/RXPromise">RXPromise</a> library in a typical style, it would look something like this:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="nf">sendPushForRecipient</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">recipientId</span> <span class="nf">fromSender</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">senderId</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="n">RXPromise</span> <span class="nf">all</span><span class="p">:@[[</span><span class="n">PIXNetwork</span> <span class="nf">getUserDataForId</span><span class="p">:</span><span class="n">senderId</span><span class="p">]</span>
+                   <span class="p">[</span><span class="n">PIXNetwork</span> <span class="nf">unreadCountForUserId</span><span class="p">:</span><span class="n">recipientId</span><span class="p">]]]</span>
+  <span class="p">.</span><span class="n">thenOnMain</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSString</span><span class="o">*</span> <span class="n">userName</span> <span class="o">=</span> <span class="p">[[</span><span class="n">results</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="nf">objectForKey</span><span class="p">:</span><span class="s">@"userName"</span><span class="p">];</span>
+    <span class="n">NSNumber</span><span class="o">*</span> <span class="n">unreadCount</span> <span class="o">=</span> <span class="p">[</span><span class="n">results</span> <span class="nf">objectAtIndex</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">NSString</span><span class="o">*</span> <span class="n">pushMessage</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%@ sent you a message (%@ unread)"</span><span class="p">,</span> <span class="n">userName</span><span class="p">,</span> <span class="n">unreadCount</span><span class="p">];</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">PIXPush</span> <span class="nf">sendPushToUser</span><span class="p">:</span><span class="n">recipientId</span> <span class="nf">withMessage</span><span class="p">:</span><span class="n">pushMessage</span><span class="p">];</span>
+  <span class="p">},</span> <span class="nb">nil</span><span class="p">)</span>
+  <span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="nb">nil</span><span class="p">,</span> <span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>A few differences are immediately noticeable:</p>
+
+<ul>
+<li><p>No need to manage state</p></li>
+<li><p>Less indentation, especially notable in examples with nested callbacks:</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">id</span> <span class="n">data1</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp1</span><span class="p">:</span><span class="n">data1</span> <span class="nf">completion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result1</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp2</span><span class="p">:</span><span class="n">result1</span> <span class="nf">completion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result2</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp3</span><span class="p">:</span><span class="n">result2</span> <span class="nf">completion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result3</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp4</span><span class="p">:</span><span class="n">result3</span> <span class="nf">completion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result4</span><span class="p">,</span> <span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// Do something
+</span>    <span class="p">}];</span>
+  <span class="p">}];</span>
+<span class="p">}];</span>
+</code></pre></div>
+<p>versus</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">id</span> <span class="n">data1</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp1</span><span class="p">:</span><span class="n">data1</span><span class="p">]</span>
+<span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">result1</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp2</span><span class="p">:</span><span class="n">result1</span><span class="p">];</span>
+<span class="p">},</span> <span class="nb">nil</span><span class="p">)</span>
+<span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">result2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp3</span><span class="p">:</span><span class="n">result2</span><span class="p">];</span>
+<span class="p">},</span> <span class="nb">nil</span><span class="p">)</span>
+<span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">result3</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp4</span><span class="p">:</span><span class="n">result3</span><span class="p">];</span>
+<span class="p">},</span> <span class="nb">nil</span><span class="p">)</span>
+<span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="nb">nil</span><span class="p">,</span> <span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div>
+<ul>
+<li>All the errors are handled in one piece of code.</li>
+</ul>
+
+<h2 id="how-promises-work">How Promises Work</h2>
+
+<p>We&#39;ve seen one piece of code with promises, so let&#39;s talk about what they actually are, this time in JavaScript-like pseudocode.</p>
+
+<p>In most implementations, a promise is an object that you use to interact with the result of an asynchronous operation; when you start an asynchronous operation, you get back a promise.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+</code></pre></div>
+<p>What can you do with a promise? The typical interface involves a single method, <code>then</code>, which allows you to attach success/error handlers to the operation. When the operation completes, the promise is <em>resolved</em>. If the operation succeeded, the promise is <em>fulfilled</em> with the result of the operation, which is passed to the success callback; if the operation failed, the promise is <em>rejected</em> with some error, which is passed to the error callback.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+<span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// called if promise is fulfilled with result</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// called if promise is rejected with error</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>So far, this just looks like a normal callback. The interesting thing is that <code>then</code> <strong>also</strong> returns a promise.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise1</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+   <span class="p">...</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>How does this promise get resolved? The answer depends on the return value of the original promise&#39;s called handler.</p>
+
+<p>If the called handler returns a promise, <strong>the promise returned by <code>then</code> is resolved in the same way, at the same time, as the promise returned from the handler</strong>.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise1</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">writeStringToFile</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="s1">'foo.txt'</span><span class="p">);</span> <span class="c1">// returns a promise</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// More on this later</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="c1">// If the network request succeeds, promise2 will be resolved as if it were the writeStringToFile promise.</span>
+</code></pre></div>
+<p>If the called handler returns any other value, <strong>the promise returned by <code>then</code> is fulfilled with the returned value after the handler returns</strong>.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise1</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">return</span> <span class="nx">synchronous_rot13</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="c1">// returns a string</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// More on this later</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="c1">// If the network request succeeds, promise2 will be fulfilled with the rot13'd string after promise1's callback returns.</span>
+</code></pre></div>
+<p>There&#39;s one more case: the handlers are allowed to be null. If the handler to be called is null, i.e. non-existent, <strong>the promise returned by <code>then</code> is resolved in the same way as the original promise</strong>.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">requestData</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">makeNetworkRequest_p</span><span class="p">(</span><span class="nx">requestData</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">promise1</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="s2">"5"</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="c1">// If the network request succeeds, promise2 will be fulfilled with the network request result.</span>
+<span class="c1">// If the network request fails, promise2 will be fulfilled with "5".</span>
+</code></pre></div>
+<p>This rule is the one that allows us to do all the error handling in one place. If all error handlers but the last one in a chain are null, any error gets &quot;forwarded&quot; to the last error handler:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">async1</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">async2</span><span class="p">();</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">async3</span><span class="p">();</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// An error in async1(), async2(), or async3() gets "forwarded" to here</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>One final note about how promises work: <code>then</code> can be called on a promise multiple times, each time creating a new promise. For example, if you wanted to do two things with the contents of some file:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">readFileData</span><span class="p">(</span><span class="s1">'foo.txt'</span><span class="p">);</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">operation1</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Will be called if file read or operation1 fails</span>
+<span class="p">});</span>
+
+<span class="nx">p</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">operation2</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Will be called if file read or operation2 fails</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>In the above code, both <code>operation1</code> and <code>operation2</code> will be run with the file data if it loads successfully. On the other hand, if an error occurs during file loading, both error handling functions will run. If you wanted to handle the error just once, you could do something like this:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">readFileData</span><span class="p">(</span><span class="s1">'foo.txt'</span><span class="p">);</span>
+
+<span class="c1">// Add error handler for file read fail</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Handle file read error</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// Add operation1 control flow</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">operation1</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Will be called only if operation1 fails</span>
+<span class="p">});</span>
+
+<span class="c1">// Add operation2 control flow</span>
+<span class="nx">p</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">operation2</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">},</span> <span class="kc">null</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Will be called only if operation2 fails</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="a-specific-implementation">A Specific Implementation</h2>
+
+<p>To explore the implications of the above, let&#39;s look at a few features of a specific implementation.</p>
+
+<p><a href="https://github.com/couchdeveloper/RXPromise">RXPromise</a> is a fairly full-featured Objective-C implementation of promises for OS X/iOS, based on the popular <a href="https://github.com/promises-aplus/promises-spec">Promises/A+</a> specification. It has excellent integration with native concurrency primitives, such as <a href="https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/Reference/reference.html">dispatch queues</a>, <a href="https://developer.apple.com/library/mac/documentation/cocoa/reference/NSOperationQueue_class/Reference/Reference.html">NSOperationQueues</a>, and others.</p>
+
+<p>Like most implementations, RXPromise includes useful features outside the common specification.</p>
+
+<ul>
+<li>variants of <code>then:</code>, used to execute callbacks in specific contexts:</li>
+</ul>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp</span><span class="p">]</span>
+<span class="p">.</span><span class="n">thenOnMain</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">opResult</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// this will be run on the main dispatch queue
+</span><span class="p">},</span> <span class="nb">nil</span><span class="p">);</span>
+</code></pre></div><div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp</span><span class="p">]</span>
+<span class="p">.</span><span class="n">thenOn</span><span class="p">(</span><span class="n">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">opResult</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// this will be run on the global default priority queue
+</span><span class="p">},</span> <span class="nb">nil</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li><code>all:</code> (and the related <code>allSettled:</code>), used to &quot;combine&quot; the operations that promises refer to, grouping their results together without affecting the concurrency of the operations:</li>
+</ul>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">RXPromise</span><span class="o">*</span> <span class="n">p1</span> <span class="o">=</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp1</span><span class="p">];</span>
+<span class="n">RXPromise</span><span class="o">*</span> <span class="n">p2</span> <span class="o">=</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp2</span><span class="p">];</span>
+<span class="p">[</span><span class="n">RXPromise</span> <span class="nf">all</span><span class="p">:@[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]]</span>
+<span class="p">.</span><span class="n">then</span><span class="p">(</span><span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">id</span> <span class="n">op1Result</span><span class="p">,</span> <span class="n">id</span> <span class="n">op2Result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do stuff
+</span><span class="p">},</span> <span class="o">^</span><span class="n">id</span> <span class="p">(</span><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// an error in any promise immediately rejects the combined promise when all: is used
+</span><span class="p">});</span>
+</code></pre></div>
+<ul>
+<li><code>cancel:</code>, used to cancel pending asynchronous operations</li>
+</ul>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">RXPromise</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="n">foo</span> <span class="nf">asyncOp</span><span class="p">];</span>
+<span class="p">...</span>
+<span class="n">BOOL</span> <span class="n">shouldContinue</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">shouldContinue</span><span class="p">)</span>
+  <span class="p">[</span><span class="n">p</span> <span class="nf">cancel</span><span class="p">];</span>
+</code></pre></div>
+<ul>
+<li>other useful things (setting timeouts, sequencing promises, repeating promises, and more)</li>
+</ul>
+
+<p>All this is just a taste of what well-written promise libraries like RXPromise have to offer.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Promises can take a little experience to understand intuitively, but they&#39;re not any more difficult to use than callbacks. They just might make your code a little cleaner. Why not give them a shot?</p>
+
+<h3 id="implementations">Implementations</h3>
+
+<ul>
+<li><a href="https://github.com/cujojs/when">when.js</a> - A popular <a href="https://github.com/promises-aplus/promises-spec">Promises/A+</a>-compliant JavaScript implementation</li>
+<li><a href="http://twistedmatrix.com/documents/13.0.0/api/twisted.internet.defer.Deferred.html">Twisted&#39;s Deferred</a> - The &quot;Deferred&quot; class from the Python Twisted library with an interface like Promises/A+</li>
+<li><a href="https://www.parse.com/docs/js/symbols/Parse.Promise.html">Parse.Promise</a> - An implementation of promises built into <a href="https://www.parse.com/">Parse</a>&#39;s JavaScript SDK</li>
+<li><a href="http://jdeferred.org/">JDeferred</a> - A Java implementation implementing a similar interface</li>
+<li><a href="https://github.com/couchdeveloper/RXPromise">RXPromise</a> - An Objective-C implementation with excellent iOS/OS X integration</li>
+</ul>
+
+<p style="text-align: right;">
+  Post picture from www.flazingo.com
+</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Popups don't have to be an ng-Pain!</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-04-22/popups-dont-have-to-be-an-ng-pain/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Popups don't have to be an ng-Pain!</h1>
+    <p class="post-meta">
+      Graham Zuber • <span class="date">Apr 22, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <h1 id="what-is-this">What is this?</h1>
+
+<p>This post is all about a smart way to manage your popups in AngularJS. It can also be extended to make your monolithic controllers and HTML templates more manageable (sweet, sweet modularization).</p>
+
+<h1 id="why-is-this">Why is this?</h1>
+
+<p>Recently, I created a web app for one of our clients that wanted to mimic the behavior of their mobile apps. The idea was to &quot;stack&quot; the mobile page views side by side in order to use the increased screen size. Making sense? No? That&#39;s fine, it&#39;s not really relevant to this article.</p>
+
+<p>To fulfill these layout needs, I developed something I like to call the pane-switcher (which has become infamous here at Pixio; mainly because I won&#39;t shut up about it). The pane-switcher is essentially a system for compiling AngularJS directives when you need them and removing them from the page entirely when you&#39;re done with them. It&#39;s called the pane-switcher because I created it for panes rather than popups, but in the process of creating it I realized it could solve my popup problems too.</p>
+
+<blockquote>
+<p>Note:
+I was trying to mimic mobile development practices where you can create a view, it takes care of user input, and calls a callback before destroying itself. </p>
+</blockquote>
+
+<h1 id="ugh-i-hate-popups">Ugh, I hate popups...</h1>
+
+<p>I&#39;m with you there. Popups are something that I&#39;ve always wanted to do better in AngularJS. I&#39;ve tried many different solutions, all of which I disliked. Have you ever ended up with 4 or 5 popups in your HTML template with &quot;visibility <code>bool</code>s&quot; tied to an <code>ng-show</code> attribute for each one?</p>
+
+<p>Shhh, no more tears. Only pane-switcher now.</p>
+
+<h1 id="let-39-s-get-down-to-business">Let&#39;s get down to business</h1>
+
+<p>The pane-switcher begins and ends with AngularJS directives. It maintains a stack for popups. One could argue that all we need for the popup is a single object variable, but maybe you want multiple layers of popups. Maybe not. Point is that you could, I don&#39;t know your life. </p>
+
+<p>It dynamically (and programmatically) builds HTML elements. It then compiles them using the AngularJS <code>$compile</code> object into the directive that corresponds to their HTML element tag.</p>
+
+<p>Let&#39;s start an example to show off the pane-switcher! For a more in-depth example, please see the repo I set up on <a href="https://github.com/grahamhz/pane-switcher">my GitHub</a>.</p>
+
+<h2 id="setting-up-the-pane-switcher">Setting up the pane switcher</h2>
+
+<p>Place the pane-switcher directive into our <code>ng-view</code> template:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;pane-switcher</span> <span class="na">control=</span><span class="s">"paneSwitcherCtrl"</span> <span class="na">config=</span><span class="s">"paneSwitcherConfig"</span><span class="nt">&gt;&lt;/pane-switcher&gt;</span>
+</code></pre></div>
+<p>These are objects that were created in the parent controller of the pane switcher. Let&#39;s go over each one:</p>
+
+<h3 id="control"><code>control</code></h3>
+
+<p>The <code>control</code> property is an object that represents the functionality needed to add/delete things from the pane-switcher. It&#39;s an empty object that the pane-switcher adds methods to in order to allow the controller to manipulate the popups on screen later.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">paneSwitcherCtrl</span> <span class="o">=</span> <span class="p">{};</span>
+</code></pre></div>
+<h3 id="config"><code>config</code></h3>
+
+<p>This is a config object for the pane-switcher. You can fill this object with anything! In this example, I define properties for the pane-switcher to watch from the root scope in order to keep track of significant width-change events (this way, the pane-switcher could potentially notify any popups that need to change their properties if, say, the browser window gets shrunk to a mobile resolution).</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">$scope</span><span class="p">.</span><span class="nx">paneSwitcherConfig</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">widthWatchers</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">'$root.isMobile'</span><span class="p">,</span>
+        <span class="s1">'$root.showSideMenu'</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="creating-the-pane-switcher">Creating the pane switcher</h2>
+
+<h3 id="scope">Scope</h3>
+
+<p>Let&#39;s define the scope of the pane-switcher directive:</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">paneSwitcherDirective</span><span class="p">.</span><span class="nx">scope</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">control</span><span class="p">:</span> <span class="s1">'='</span><span class="p">,</span>
+    <span class="na">config</span><span class="p">:</span> <span class="s1">'='</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>This is a basic AngularJS directive property. Basically, I&#39;m setting up <code>control</code> and <code>config</code> in the pane-switcher&#39;s scope to be references to objects also referenced in my controller. This is what allows me to attach methods to <code>control</code>, which my controller can call later. For more info about directives and this &#39;=&#39; syntax, see the <a href="https://docs.angularjs.org/guide/directive">AngularJS documentation</a>.</p>
+
+<blockquote>
+<p>Note:
+I&#39;m also limiting the scope of the pane-switcher so that it can&#39;t access anything the controller doesn&#39;t want it to. Encapsulation, baby.</p>
+</blockquote>
+
+<h3 id="link-function">Link Function</h3>
+
+<p>Let&#39;s start building the pane-switcher&#39;s main functionality. The most important part of the pane-switcher is the ability to push and pop and popup.</p>
+
+<h4 id="pushing-a-popup-onto-the-stack">Pushing a Popup onto the Stack</h4>
+
+<p>Let&#39;s create a function so the controller can push a popup onto the stack. This is the sweet magic sauce that is the pane switcher. </p>
+
+<p>This may seem complex, but it&#39;s really not. I&#39;ve explained the majority of the functionality in the comments. It&#39;s really just there to push the popup onto the stack, making sure that it&#39;s fully compiled and set up with its directive attributes.</p>
+
+<blockquote>
+<p>Note:
+You&#39;ll notice I define this function on the <code>control</code> object to which the pane-switcher and controller share references. This allows the controller access to these functions in order to call them later.</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**
+ * pushes a popup onto the stack, compiles, and displays it
+ * @param {String} tag: tag of html element to create
+ * @param {Array}{Object} attrs: array of attr objects defined as:
+ * {
+ *   key: key of html attr
+ *   value: value of html attr
+ * }
+ * @param {Object} popup: object that defines the scope of the new popup
+ */</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">control</span><span class="p">.</span><span class="nx">push_popup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">tag</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">popup</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// optionally limit the number of popups on screen</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">popupStack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">control</span><span class="p">.</span><span class="nx">pop_popup</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Save a reference to the scope of this popup. </span>
+    <span class="c1">// This is how the popup gets access to the popup data passed in here</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">popup</span> <span class="o">=</span> <span class="nx">popup</span><span class="p">;</span>
+
+    <span class="c1">// create element where tag is the name of the popup directive you're creating</span>
+    <span class="kd">var</span> <span class="nx">popupElem</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">element</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">tag</span><span class="p">));</span>
+    <span class="c1">// add attribute to element so it can access the popup object we just set on this scope</span>
+    <span class="nx">popupElem</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,</span> <span class="s1">'popup'</span><span class="p">);</span>
+     <span class="c1">// add any relevant classes</span>
+    <span class="nx">popupElem</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">'popup-enter'</span><span class="p">);</span>
+
+    <span class="c1">// add any attributes passed in through attr parameter</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">attrs</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">attrs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">attrs</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">popupElem</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="nx">attrs</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">key</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">value</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// compile the popup with this scope</span>
+    <span class="nx">$compile</span><span class="p">(</span><span class="nx">popupElem</span><span class="p">)(</span><span class="nx">$scope</span><span class="p">);</span>
+    <span class="c1">// find the container I set up in the pane-switcher's HTML template</span>
+    <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="nx">element</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">'#pane-switcher-popup-container'</span><span class="p">);</span>
+
+    <span class="c1">// save anything you want in the popup stack and push it to access it later</span>
+    <span class="kd">var</span> <span class="nx">popupStackObj</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">tag</span><span class="p">:</span> <span class="nx">tag</span><span class="p">,</span>
+        <span class="na">level</span><span class="p">:</span> <span class="nx">popupStack</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+        <span class="na">object</span><span class="p">:</span> <span class="nx">popupElem</span>
+    <span class="p">};</span>
+    <span class="nx">popupStack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">popupStackObj</span><span class="p">);</span>
+
+    <span class="c1">// animate the popup entering</span>
+    <span class="nx">$animate</span><span class="p">.</span><span class="nx">enter</span><span class="p">(</span><span class="nx">popupElem</span><span class="p">,</span> <span class="nx">container</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<h4 id="let-39-s-pop-that-popup">Let&#39;s Pop that Popup</h4>
+
+<p>At this point, popping a popup is super easy! Let&#39;s define that functionality.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="cm">/**
+ * pops the top pane off of the view stack,
+ * removes from dom
+ */</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">control</span><span class="p">.</span><span class="nx">pop_popup</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">popupStack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// take it off the top!</span>
+        <span class="kd">var</span> <span class="nx">popup</span> <span class="o">=</span> <span class="nx">popupStack</span><span class="p">.</span><span class="nx">pop</span><span class="p">();</span>
+        <span class="c1">// you can even animate the popup leaving the page!</span>
+        <span class="c1">// This will remove the element from the page upon completion</span>
+        <span class="nx">$animate</span><span class="p">.</span><span class="nx">leave</span><span class="p">(</span><span class="nx">popup</span><span class="p">.</span><span class="nx">object</span><span class="p">);</span>
+        <span class="c1">// popup.object.remove(); if you don't want to animate it</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="using-the-pane-switcher">Using the Pane Switcher</h2>
+
+<p>Now let&#39;s use it! From my controller, I can create a new popup.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">attrs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="na">key</span><span class="p">:</span> <span class="s2">"class"</span><span class="p">,</span> <span class="na">value</span><span class="p">:</span> <span class="s2">"some-class-I-dunno"</span> <span class="p">}</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">popup</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">elementId</span><span class="p">:</span> <span class="s1">'cool-popup'</span><span class="p">,</span>
+    <span class="na">title</span><span class="p">:</span> <span class="s1">'This is a title!'</span><span class="p">,</span>
+    <span class="na">confirmButtonText</span><span class="p">:</span> <span class="s1">'I Concur'</span><span class="p">,</span>
+    <span class="na">cancelButtonText</span><span class="p">:</span> <span class="s1">'Meh'</span><span class="p">,</span>
+    <span class="na">confirmButtonClass</span><span class="p">:</span> <span class="s1">'css-class-for-confirm-button'</span><span class="p">,</span>
+    <span class="na">cancelButtonClass</span><span class="p">:</span> <span class="s1">'css-class-for-cancel-button'</span><span class="p">,</span>
+    <span class="na">confirmButtonCallback</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span> <span class="nx">confirm</span><span class="p">();</span> <span class="p">},</span>
+    <span class="na">cancelButtonCallback</span><span class="p">:</span> <span class="kd">function</span><span class="p">(){</span> <span class="nx">cancel</span><span class="p">();</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">$scope</span><span class="p">.</span><span class="nx">paneSwitcherCtrl</span><span class="p">.</span><span class="nx">push_popup</span><span class="p">(</span><span class="s1">'totally-cool-popup'</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">popup</span><span class="p">);</span>
+</code></pre></div>
+<p>And there you have it! This assumes that you have a directive in your AngularJS app called <code>totallyCoolPopup</code>. This will create an instance of that directive and animate it onto the page! You&#39;ll also need to hook up <code>confirm()</code> and <code>cancel()</code> to remove the popup and then do whatever you want it to.</p>
+
+<h2 id="your-popup-directive">Your popup directive</h2>
+
+<p>In order for this to work, the HTML template for <code>totallyCoolPopup</code> might look something like this:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html">
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"{{ data.elementId }}"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>{{ data.title }}<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">"data.confirmButtonCallback()"</span> <span class="na">class=</span><span class="s">"{{ data.confirmButtonClass }}"</span><span class="nt">&gt;</span>
+        {{ data.confirmButtonText }}
+    <span class="nt">&lt;/button&gt;</span>
+    <span class="nt">&lt;button</span> <span class="na">ng-click=</span><span class="s">"data.cancelButtonCallback()"</span> <span class="na">class=</span><span class="s">"{{ data.cancelButtonClass }}"</span><span class="nt">&gt;</span>
+        {{ data.cancelButtonText }}
+    <span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre></div>
+<p>Also, I would suggest making the totallyCoolPopup directive with an isolate scope. This will keep the popup encapsulated and make it unable to mess with the pane-switcher’s scope. If you haven’t dealt with an isolate scope, here’s an example of the totallyCoolPopup’s scope definition.</p>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">totallyCoolPopupDirective</span><span class="p">.</span><span class="nx">scope</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">data</span><span class="p">:</span> <span class="s1">'='</span>
+<span class="p">};</span>
+</code></pre></div>
+<h2 id="conclusion">Conclusion</h2>
+
+<p>If you&#39;ve ever been annoyed by poor implementations of popups in AngularJS apps, the pane-switcher is here for you. You could also use this for normal page content! If you have an element that disappears from or is inserted into your layout, consider this solution! It wouldn&#39;t be hard to adapt this to do more than just popups (as I did). I will say, however, that if you&#39;re going to use this for more than popups (especially if it involves tracking state) consider the <a href="https://github.com/angular-ui/ui-router">ui-router</a>.</p>
+
+<p>If you&#39;d like more complete source code, checkout my example repo on <a href="https://github.com/grahamhz/pane-switcher">GitHub</a>.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

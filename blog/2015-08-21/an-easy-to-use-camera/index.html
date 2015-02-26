@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; An Easy-to-Use Camera</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-08-21/an-easy-to-use-camera/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; An Easy-to-Use Camera</h1>
+    <p class="post-meta">
+      Daniel Blakemore • <span class="date">Aug 21, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>It&#39;s here.  An easy library for getting user photos that does everything in one method call:</p>
+<div class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[[</span><span class="n">PXCamera</span> <span class="nf">camera</span><span class="p">]</span> <span class="nf">getImageInViewController</span><span class="p">:</span><span class="n">self</span> <span class="nf">interface</span><span class="p">:</span><span class="n">PXCameraInterfaceCamera</span> <span class="n">completion</span><span class="o">:^</span><span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span> <span class="n">image</span><span class="p">,</span> <span class="n">PXCameraImageSource</span> <span class="n">source</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// boom!
+</span><span class="p">}];</span>
+</code></pre></div>
+<h2 id="a-bit-of-history">A bit of history</h2>
+
+<p>Once upon a time several years ago, Pete Shirley, a friend of the founders of our company, approached us to help him try out some ideas he had in app form.  He wanted to build an application for filtering selfies to look more halloween-like: he wrote some pretty involved filtering for making people look like vampires, ghouls, etc..  This being a sort of prototype/side-project-for-a-friend, development was more fast and loose with less regard for modularity than we usually like.  </p>
+
+<p>Meanwhile, I was working on another app for Pete, that centered around photo messaging.  While writing this, I had to solve some of the same camera-related problems that we had already solved (albeit not in a transportable way) on the previous app.  So I wrote a camera library in the way I felt it should work.  All the complicated bits and state keeping were hidden behind a simple interface of the form give-me-an-image-from-this-source.  </p>
+
+<p>Fast forward a year, this is now how all of the apps in the Pete Shirley family of apps get their photos from this camera library.  The original code in the first filtering projects we did has since been upgraded to use this library and maintainability has skyrocketed.</p>
+
+<h2 id="pxcamera"><a href="https://github.com/pixio/PXCamera">PXCamera</a></h2>
+
+<p>There are a couple of things that this camera provides that are nice beyond what the <code>UIImagePickerViewController</code> gives you:</p>
+
+<ul>
+<li>An optional grid overlay (like the full camera app)</li>
+<li>A button to pick from the photo library in case the user opens the camera and then decides they wanted a picture they already took</li>
+<li>A shutter delay timer (long press the shutter button) for taking timed photos</li>
+<li>A really simple Objective-C interface</li>
+</ul>
+
+<div style="text-align:center"><img src ="/img/posts/camera-interface.png" width=250 alt="Camera Interface featuring Calvin Kern" title="Camera Interface featuring Calvin Kern" />&nbsp;<img src ="/img/posts/camera-interface-2.png" width=440 alt="Landscape Camera Interface featuring Coca-Cola" title="Landscape Camera Interface featuring Coca-Cola" /></div>
+
+<p>The default Apple camera is pretty Spartan and it&#39;s no fun to set up.  PXCamera tries to be the opposite on both counts.  Now you can use this pod and have your user taking or picking photos in no time at all. Enjoy!</p>
+
+<h2 id="everyone-loves-their-own-content">Everyone loves their own content</h2>
+
+<p>Next week there will be some more image-related code coming your way.  Give your users the power to bask in their own glory.  I&#39;m sure that&#39;s what the Twitter people thought when they gave people the custom banner image. Alas, user content cuts both ways =D.</p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on my shoulders.  The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote almost every example project for all the CococaPods that have and will be released.  <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods he wrote himself.  Others, like <a href="https://github.com/sphippen">Spencer Phippen</a> and <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

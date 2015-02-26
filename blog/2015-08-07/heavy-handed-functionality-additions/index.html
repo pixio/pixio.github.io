@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; Heavy-handed Functionality Additions</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-08-07/heavy-handed-functionality-additions/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; Heavy-handed Functionality Additions</h1>
+    <p class="post-meta">
+      Daniel Blakemore • <span class="date">Aug 7, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>This week&#39;s pods are the result of dissatisfaction with parts of <code>UIKit</code> combined with needs in various projects for more control and capability.  They each live in different parts of the UI and handle vastly different problems, but they all started with needing something from <code>UIKit</code> that wasn&#39;t there. Here we go.</p>
+
+<h2 id="pximageview-how-do-i-make-an-image-scale-to-fit-but-only-on-two-sides"><a href="https://github.com/pixio/PXImageView">PXImageView</a>: How do I make an image scale to fit but only on two sides?</h2>
+
+<p>There once was a project with a focus on user images.  That&#39;s a first, right?  This particular project used user images everywhere from thumbnails, to headers of views, to backgrounds of the navigation bar and more.  Several of these image-containing-elements needed to beautifully resize, clipping user content in a nice way that fit the full-bleed design aesthetic.</p>
+
+<p>So here&#39;s a problem: if you have an image in an image view using <code>UIViewContentModeScaleAspectFit</code> and it&#39;s has a wider aspect ratio than the image view, when you compress that image view vertically, suddenly it&#39;s moving around in a weird way:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">+------------------------+
+|                        |
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|IIIIIIIIIIIIIIIIIIIIIIII|
+|                        |
++------------------------+
+            |
+            |
+            |
+            V       
++------------------------+
+|     IIIIIIIIIIIIII     |
+|     IIIIIIIIIIIIII     |
+|     IIIIIIIIIIIIII     |
+|     IIIIIIIIIIIIII     |
+|     IIIIIIIIIIIIII     |
++------------------------+
+</code></pre></div>
+<p>There&#39;s a really awkward transition between horizontal and vertical letter-boxing that happens as the user performs whatever action compresses the image view.  The desired behavior in this case was to vertical letter-boxing or clipping and have the image scale up or down to fill all the horizontal space in the image view.</p>
+
+<p>We created a replacement for UIImageView that provides some better content modes than the standard <code>UIViewContentModes</code> including one that allows for the behavior mentioned above.  This is how that image content mode <code>PXContentModeSides</code> behaves as the image view resizes:</p>
+
+<video src="/img/posts/PXContentModeSides.webm" loop=true autoplay=true></video>
+
+<p>There are companion <del>videos</del> gifs for all of the other content modes in the README.md for the <code>PXImageView</code> on <a href="https://github.com/pixio/PXImageView">GitHub</a>.</p>
+
+<h2 id="pxviewcontroller-why-does-the-navigation-controller-not-let-you-do-x"><a href="https://github.com/pixio/PXViewController">PXViewController</a>: Why does the navigation controller not let you do x?</h2>
+
+<p>There is some seemingly basic functionality in UINavigationController that is missing.  A glaring (if rationalizable) example is that there is no way to intercept presses to the system back button in the navigation bar.  Let&#39;s say for example that you have a view controller with a form in it that needs to be validated.  If you want to be able to prevent the user from leaving the screen until they correct errors in the form (or at least ask if they care), you have to use your own <code>UIBarButtonItem</code>s.  This breaks the visual flow if this screen is part of a navigation stack that otherwise uses the back button especially if there are additional view controllers that can be pushed from this screen.</p>
+
+<p>Beyond this limitation, there is some functionality that&#39;s difficult to achieve.  For example, there&#39;s not a nice way to have a completely transparent navigation bar or to have the navigation bar hide on a per-view-controller basis.  We have created a solution to this problem that delivers all of this functionality, but more importantly, has a simple interface for doing so:<code>PXViewController</code>.</p>
+
+<p>In the <code>PXViewController</code> pod, you will find several classes.  <code>PXViewController</code>, <code>PXTableViewController</code>, <code>PXCollectionViewController</code>, <code>PXTabBarController</code>, and <code>PXNavigationController</code>.  The first four all add the same functionality to the their various parent classes:</p>
+
+<ul>
+<li>A light and dark tint color that behave like UIAppearance selectors (thanks to <a href="https://github.com/m1entus/MZAppearance"><code>MZAppearance</code></a>)</li>
+<li>An overridable function for when the user presses the back button.</li>
+<li>A title and subtitle in the navigation bar.</li>
+<li>The option to have a clear navigation bar with or without shadows under the elements (title, buttons, etc).</li>
+<li>The option to hide the default chevron back button per-view-controller.</li>
+<li>Whether or not to hide the status bar per-view-controller.</li>
+<li>Whether or not to hide the nav bar per-view-controller.</li>
+</ul>
+
+<p>The last one, <code>PXNavigationController</code>, is pretty lightweight but <em><strong>REALLY</strong></em> useful. It forwards the messages <code>supportedInterfaceOrientations</code>, <code>prefersStatusBarHidden</code>, and <code>preferredStatusBarStyle</code> to the top view controller in the navigation stack so they can decide for themselves.</p>
+
+<p>It might be extreme to have to subclass a custom view controller every time you want to make a new one, but the added features give you extra freedom to do what you want or have to do without bashing your head against the wall constantly.  </p>
+
+<h2 id="pxpinnedrotation-how-do-we-make-views-rotate-in-place-like-camera"><a href="https://github.com/pixio/PXPinnedRotation">PXPinnedRotation</a>: How do we make views rotate in place like Camera?</h2>
+
+<p>Grab your phones.  </p>
+
+<p>Do it, this article isn&#39;t going anywhere.  </p>
+
+<p>Now open Camera.  Rotate your phone.  Notice how the buttons stayed in place but the icons flipped right-side-up?  Pretty cool right?</p>
+
+<p>Let&#39;s think about how you would have to implement that.  You might start off detecting orientation changes.  Then you might proceed to make a new landscape-based layout that is a rotated version of the portrait one. (Oh, and remember that you&#39;ll need a different one for the other landscape, too.)  Then you during the rotation, you flip all your icons to the side and when rotation is done flip them back up.  There are a few problems with this approach.  First of all, have to make four different versions of your layout code.  Pain.  Then you have to solve all sorts of bugs with your animations going crazy when the rotation happens.  Major pain.</p>
+
+<p>What if you got it for free?  What if you only had to call one method on each view you wanted to animate?  What if I was writing a hypothetical situation and a series of leading questions as a build up to saying something along the lines of &quot;now you can&quot;?</p>
+
+<p>Now you can.</p>
+
+<p>We have written a view/view controller pair that allow you to do just that.  With no pain on your part, you can get the pinned rotation behavior from Camera with one caveat.  You have to be using a constraint-based layout.  You should be doing that anyway because it will make your life easier. </p>
+
+<p>Under the hood, <code>PXPinnedRotation</code> uses an orientation-based constraint rewriting function that maps your old layout constraints to a transposed layout for the new orientation you are in.  Any views you have indicated should rotate right-side-up are automatically rotated after the orientation change.  Now you too can have magical pinned rotation code and make your cameras look as good as Apple&#39;s.</p>
+
+<h2 id="more-magic-on-the-way">More magic on the way</h2>
+
+<p>Next week (unless something changes) we&#39;ll be releasing a camera that uses the pinned rotation. Also, you may start seeing some of our Android libraries pop up during Free Code Fridays.  Keep an eye out! There is some really useful stuff in there <em>including</em> a great gem that will solve those pesky life-cycle-based crashes that so often plague your activities.</p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on my shoulders.  The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote almost every example project for all the CococaPods that have and will be released.  <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods he wrote himself.  Others, like <a href="https://github.com/sphippen">Spencer Phippen</a> and <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

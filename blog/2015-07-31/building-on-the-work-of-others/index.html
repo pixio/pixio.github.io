@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Free Code Fridays&#58; Building on the Work of Others</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2015-07-31/building-on-the-work-of-others/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Free Code Fridays&#58; Building on the Work of Others</h1>
+    <p class="post-meta">
+      Daniel Blakemore • <span class="date">Jul 31, 2015</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>The best part of working in a thriving, open-source-friendly ecosystem like iOS is that sometimes smart people fix hard problems for you.  Working hard to craft a concise, elegant solution to a hard problem is one of the great joys of writing software.  One of the lesser joys is meeting deadlines; unfortunately, that&#39;s the one that pays the bills.  </p>
+
+<p>Sometimes, someone else in the world has already solved your problem, making it easy to avoid writing a &quot;band-aid&quot; solution or, even worse, an unhygienic hack.  In other cases, you have a cool solution that you worked hard to make and now you want to share it with others.  In both cases, living in an open-source world makes writing software less of a headache. </p>
+
+<p>Over the next few weeks, I will be sharing some of the components, categories, controls, and utilities that we&#39;ve written to make our lives a little bit easier. As a starter, I&#39;ve included a fork, a category, and a wrapper class.  This will probably be the least exciting installment in this series, but these fit the theme of the opening and the wrapper class in particular has made my life easier.</p>
+
+<h2 id="the-fork-svsegmentedcontrol">The Fork: <a href="https://github.com/samvermette/SVSegmentedControl/pull/74">SVSegmentedControl</a></h2>
+
+<p>Late last year, a client of ours hired a designer who had a habit of making designs that were a hodgepodge of controls and concepts from existing apps, all loosely coordinated with a central color scheme.  We&#39;ve all been there.  But he wanted to have an animated switch-like segmented control in the navigation bar on one particular set of screens.  He&#39;d seen it somewhere and really liked it, but he wanted it to look just so in his flat, iOS 7 color scheme.</p>
+
+<p>I love it when I can exactly match what a designer has in their head. I often start off at  <a href="https://www.cocoacontrols.com/">www.cocoacontrols.com</a> to avoid duplicating effort, and to see if there was anything that I could use or adapt.   There I found <code>SVSegmentedControl</code>, a control from the same mind that graced the world with <code>SVProgressHUD</code>.  The problem was, even though it had all sorts of configuration options, none of them affected the gradients or embossed look of pre-iOS 7 designs.  I added that functionality.  These changes can be found in the CocoaPod <a href="https://github.com/PTEz/SVSegmentedControl"><code>SVSegmentedControl@PTEz</code></a>.  I also went ahead and added HeaderDoc comments to all the methods on the control because when I&#39;m developing Option+Click is my friend.</p>
+
+<p>Boom.  Everything the designer had ever dreamed of had come true, all in one small refactor. (Well, at least everything having to do with this small switch.)  And I had shared the joy of this added functionality with the rest of the world.  It was a good day.</p>
+
+<h2 id="the-category-uialertcontroller-betterconstructor">The Category: <a href="https://github.com/pixio/UIAlertController-BetterConstructor">UIAlertController-BetterConstructor</a></h2>
+
+<p><em>This one might not seem like a big deal, but I find it really shines in combination with the wrapper class that follows.</em></p>
+
+<p>With the roll out of iOS 8 came some <a href="http://nshipster.com/uialertcontroller/">notable deprecations</a>.  Like any cutting-edge iOS developer, I immediately wanted to drop using <code>UIAlertView</code> in favor of this new magical class, <code>UIAlertController</code>.  However, Apple also introduced a wonderful set of consumer-confidence-shattering bugs that brought them relatively poor adoption rates for their new OS.  What this meant for developers is that, unlike with iOS 6, we couldn&#39;t cast off our old habits in favor of the glorious new APIs handed down from atop the Cupertino altar.  Instead, we had to start coping with the same subtle sadness that Android developers had been coping with for years: API version compatibility checking.  </p>
+
+<p>In the case of <code>UIAlertView</code> and <code>UIAlertController</code>, I had two choices: </p>
+
+<p>1) Keep using the deprecated version and deal with warnings and a sinking feeling of self-judged inadequacy. </p>
+
+<p>2) Engineer my way out of the problem.  </p>
+
+<p>The first step was to bend <code>UIAlertController</code> to my will.  Specifically, this meant crafting a way to use it without having to worry about instances of <code>UIAlertAction</code> or even using <code>-alloc</code> at all.</p>
+
+<p>This was the birth of the <code>BetterConstructor</code> category.  In a nutshell, I wanted a class method with an interface that would allow me to specify all the necessary attributes to create an instance of <code>UIAlertController</code> as an alert or a sheet. Ideally, this would allow me to specify all types of blocks (destructive, cancel, default) with as many buttons as I wanted.  That&#39;s exactly what I did.  Now you can get an instance of <code>UIAlertController</code> with your own button titles, button blocks, message, alert title, and style, all with one method call - and without the hassle of having to remember <code>UIAlertAction</code>, or even that it exists.</p>
+
+<p>It&#39;s a minor addition, but it allows the next and final item in today&#39;s post to be implemented with ease.</p>
+
+<h2 id="the-wrapper-class-pxblockalertview">The Wrapper Class: <a href="https://github.com/pixio/PXBlockAlertView">PXBlockAlertView</a></h2>
+
+<p>For anyone who has been developing long enough to appreciate the ever increasing presence of blocks in Obj-C code everywhere, the removal of delegates in favor of blocks probably brings a smile to your face.  It does to mine.  Way back when, there was a category on <code>UIAlertView</code> called <a href="https://github.com/jivadevoe/UIAlertView-Blocks"><code>AlertViewBlocks</code></a> written by <a href="https://github.com/jivadevoe">Jiva DeVoe</a>.  This category did away with the annoying <code>UIAlertViewDelegate</code> protocol in favor of some new constructors that provided a way to specify a button title and block to perform that button&#39;s action: <code>RIButtonItem</code>.  When I first discovered this category, I was in love.</p>
+
+<p>I love blocks and hate delegate overuse so <code>AlertViewBlocks</code> seemed like a perfect solution.  However, I don&#39;t like messing around with instances of classes that I use once.  Things like <code>SVProgressHUD</code> have class methods to do everything you want; you don&#39;t have to worry about instantiating them or keeping track of instances.  The annoying flaw of <code>AlertViewBlocks</code> was that it required you to instantiate <code>RIButtonItem</code>s along with your alert view and provide your blocks and button titles there.  In response, I created a version that provides a class method to instantiate and show an alert with all blocks and titles specified as arguments. <code>PXBlockAlertView</code> was born.</p>
+
+<p><sup><em>Note: technically this Pod’s birth name was PXAlertView but that was taken before I decided to move it out of our private spec repo.</em></sub></p>
+
+<p>And for a time it was good.  Then iOS 8 happened.  See above, but I wanted to keep <code>PXBlockAlertView</code> up to date. So I integrated the <code>UIAlertController-BetterConstructor</code> category into it and had it select which class to use based on whether or not the new UIAlertController was available.  At this point, this is my de facto method for showing alerts.  I almost never need text boxes or destructive buttons so I can get away with the simple case of one- or two-button alerts and I don&#39;t have to sweat the details of OS versions.  In addition, for simplicity, this class presents UIAlertControllers on the root view controller of the window, so you don&#39;t even need to worry about that.</p>
+
+<h2 id="watch-this-space">Watch This Space</h2>
+
+<p>In the coming weeks I&#39;ll be writing about some much more exciting and likely more useful classes that we&#39;ve crafted here at Pixio™.  There&#39;s some cool stuff on the way with code ranging from “pretty clever” to “very involved”, but regardless of complexity I always strive for good interface design in my code.  As you&#39;ll see, I try to keep things easy to use.  After all, I&#39;m lazy; I want my cool toys to be as easy to use as possible.</p>
+
+<hr>
+
+<p><em>Credit for these and future code releases does not rest solely on my shoulders.  The brains of multiple Pixions were involved in the creation of these components. <a href="https://github.com/calvinkern">Calvin Kern</a> wrote almost every example project for all the CococaPods that have and will be released.  <a href="https://github.com/kwongius">Kevin Wong</a> fixed lots of bugs and edge cases beyond the pods he wrote himself.  Others, like <a href="https://github.com/sphippen">Spencer Phippen</a> and <a href="https://github.com/cobbal">Andrew Cobb</a> provided code and ideas during the creation of these resources.</em></p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>

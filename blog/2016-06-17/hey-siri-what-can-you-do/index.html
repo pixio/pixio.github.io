@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Hey Siri: What can you do?</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Pixio is a team of educators and developers specializing in native mobile development and hardware communication. We have gained a reputation as one of the top mobile technology consulting services.">
+    
+    <link rel="canonical" href="http://www.pixio.com/blog/2016-06-17/hey-siri-what-can-you-do/">
+
+    <!--Icons-->
+    <link rel="icon" sizes="64x64" href="/img/icons/favicon64.ico" />
+    <link rel="icon" sizes="32x32" href="/img/icons/favicon32.ico" />
+    <link rel="icon" sizes="16x16" href="/img/icons/favicon16.ico" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/icons/apple-touch-icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/icons/apple-touch-icon114.png" />
+
+    <!-- Custom CSS & Bootstrap Core CSS - Uses Bootswatch Flatly Theme: http://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/agency.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="/css/site.css?v=1">
+    <link rel="stylesheet" href="/css/blog.css?v=1">
+</head>
+
+
+<body>
+<div style="margin-top: 100px">
+    
+
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+                <img class="img img-responsive logo navbar-brand page-scroll" href="#page-top" src="/img/logo.png"/>
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/">Home</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="/#contact">Contact</a>
+                </li>
+                                
+                
+                <li  class="active">
+                    <a class="page-scroll" href="/blog">Blog</a>
+                </li>
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+</div>
+
+<div class="container">
+    <div class="page-content">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Hey Siri: What can you do?</h1>
+    <p class="post-meta">
+      Kevin Wong • <span class="date">Jun 17, 2016</span>
+    </p>
+    
+  </header>
+
+  <article class="post-content">
+    <p>WWDC 2016 is now over and we saw all sorts of cool new things. The majority of changes introduced by Apple include things like Photos and Maps updates which help these products better compete with Google’s offerings. One of the standout announcements for developers is the opening up of core functionality to developers including lock screen extensions, map extensions, and Siri extensions. This marks a change at the world’s most valuable company which is opening up the platform more than it has ever done so in the past.</p>
+
+<h2 id="journey-into-the-darkness">Journey into the Darkness</h2>
+
+<p>Let’s take a journey into the murky waters of beta software! For this example, we’re going to add the ability to make payments and receive payments within our application. I have a (fake) bitcoin wallet application which has no users. Of course it has no users, it doesn’t have Siri integration! Now is the perfect time to fix that.</p>
+
+<p>We will begin with <a href="https://developer.apple.com/sirikit/">SiriKit</a>. No, I&#39;m not talking about <a href="https://en.wikipedia.org/wiki/Sirikit">Queen Sirikit</a>. SiriKit is actually two frameworks: <a href="https://developer.apple.com/reference/intents">Intents</a> and <a href="https://developer.apple.com/reference/intentsui">Intents UI</a>. These two frameworks allow you to create a Siri enabled extension (as well as MapKit extensions).</p>
+
+<p>Intents are objects which encapsulate information that describes an action. When you open up Siri and ask it to “Call Mom,” you are generating an intent which the system resolves by opening the dialer and calling your mother. This same basic principle applies to your SiriKit enabled extension. Siri parses your voice input and generates an intent which is handed off to your application to be handled appropriately.</p>
+
+<p>Let&#39;s begin by opening up the new Xcode 8 and adding a new target of type <strong>Intents Extension</strong>. There are a couple setup steps that must occur before we get into the code itself.</p>
+
+<p>First, the application in which the extension is embedded must request permission to use Siri. This behavior is identical to most permissioned resources on iOS such as the camera and microphone.</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kt">INPreferences</span><span class="o">.</span><span class="n">requestSiriAuthorization</span> <span class="p">{</span> <span class="n">status</span> <span class="k">in</span>
+    <span class="c1">// Handle authorization if necessary</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The other task is to modify the <code>Info.plist</code> for the Siri extension. Add any intents you wish your application to handle into the <code>IntentsSupported</code> array nested within the <code>NSExtension</code> dictionary.</p>
+
+<p>We&#39;re ready to implement the logic for our Siri extension now. Open up the <code>IntentHandler.swift</code> and clean out the existing methods. The only method left should be the <code>handler(for:)</code> method. Additionally, remove all those protocols for which the class conforms to. Replace the protocol conformance with the <code>INSendPaymentIntentHandling</code> protocol.</p>
+
+<p>Let&#39;s pause and take a look at the <a href="https://developer.apple.com/reference/intents/insendpaymentintenthandling">INSendPaymentIntentHandling</a> protocol. There are 4 &quot;resolve&quot; methods, one &quot;confirm&quot; method, and one &quot;handle&quot; method. Only the <code>handle(sendPayment:completion:)</code> method is required. This protocol maps directly to how a conversation is handled with Siri. The user begins by making a request of Siri which resolves it. If not enough information is provided, Siri will ask for clarification and the input(s) will be resolved until the user&#39;s intent is fully understood. The request is then confirmed (if necessary) and then it&#39;s actually performed (or handled). This incredibly simple protocol perfectly defines the way your users have conversations with Siri. Amazing!</p>
+
+<p>The resolution step is important to ensure that we have enough information as well as the right information. If we are sending bitcoins to Robert and we don&#39;t have his wallet address, we can&#39;t send him money. Handling this case is really simple! We just have to take in the input, determine if the input contains enough information to fulfill the request, and return the corresponding result.</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">resolvePayee</span><span class="p">(</span><span class="n">forSendPayment</span> <span class="nv">intent</span><span class="p">:</span> <span class="kt">INSendPaymentIntent</span><span class="p">,</span> <span class="n">with</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">INPersonResolutionResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">payee</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="n">payee</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nf">completion</span><span class="p">(</span><span class="kt">INPersonResolutionResult</span><span class="o">.</span><span class="nf">needsValue</span><span class="p">())</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="k">let</span> <span class="nv">resolutionResult</span><span class="p">:</span> <span class="kt">INPersonResolutionResult</span>
+
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">_</span> <span class="o">=</span> <span class="kt">Wallet</span><span class="o">.</span><span class="nf">walletAddress</span><span class="p">(</span><span class="nv">forUser</span><span class="p">:</span> <span class="n">payee</span><span class="o">.</span><span class="n">displayName</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">resolutionResult</span> <span class="o">=</span> <span class="kt">INPersonResolutionResult</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">payee</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">resolutionResult</span> <span class="o">=</span> <span class="kt">INPersonResolutionResult</span><span class="o">.</span><span class="nf">needsMoreDetails</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">payee</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nf">completion</span><span class="p">(</span><span class="n">resolutionResult</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>We don&#39;t need a payment method, so let&#39;s explicitly mark it as not required. Doing so, Siri will ignore any payment method information. This is not strictly necessary as not implementing the method will produce the same result, but let&#39;s be pedantic here.</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">resolvePaymentMethod</span><span class="p">(</span><span class="n">forSendPayment</span> <span class="nv">intent</span><span class="p">:</span> <span class="kt">INSendPaymentIntent</span><span class="p">,</span> <span class="n">with</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">INPaymentMethodResolutionResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">completion</span><span class="p">(</span><span class="kt">INPaymentMethodResolutionResult</span><span class="o">.</span><span class="nf">notRequired</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>What happens if the user doesn&#39;t have enough money in their wallet? We can resolve that step before we actually send. Our <code>resolveCurrencyAmount(forSendPayment:with:)</code> will look something like this:</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nv">resolutionResult</span><span class="p">:</span> <span class="kt">INCurrencyAmountResolutionResult</span>
+
+<span class="k">if</span> <span class="k">let</span> <span class="nv">amount</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="n">currencyAmount</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">bitcoinAmount</span> <span class="o">=</span> <span class="n">amount</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="nf">convertToBitcoin</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">amount</span><span class="o">.</span><span class="n">currencyCode</span><span class="p">)</span> <span class="k">where</span> <span class="kt">Wallet</span><span class="o">.</span><span class="nf">canSpend</span><span class="p">(</span><span class="n">bitcoinAmount</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">resolutionResult</span> <span class="o">=</span> <span class="kt">INCurrencyAmountResolutionResult</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">amount</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="n">resolutionResult</span> <span class="o">=</span> <span class="kt">INCurrencyAmountResolutionResult</span><span class="o">.</span><span class="nf">unsupported</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="o">.</span><span class="n">notNow</span><span class="p">,</span> <span class="nv">alternativeCurrencyAmounts</span><span class="p">:</span> <span class="p">[</span><span class="kt">INCurrencyAmount</span><span class="p">(</span><span class="nv">amount</span><span class="p">:</span> <span class="kt">Wallet</span><span class="o">.</span><span class="n">currentBalance</span><span class="p">,</span> <span class="nv">currencyCode</span><span class="p">:</span> <span class="s">"BTC"</span><span class="p">)])</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+    <span class="n">resolutionResult</span> <span class="o">=</span> <span class="kt">INCurrencyAmountResolutionResult</span><span class="o">.</span><span class="nf">needsValue</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="nf">completion</span><span class="p">(</span><span class="n">resolutionResult</span><span class="p">)</span>
+</code></pre></div>
+<p>The logic here is simple enough. Convert the intended amount to bitcoin and determine if that amount is payable with the given funds of the wallet. If not enough money is provided, offer the full contents of the wallet as an alternative.</p>
+
+<blockquote>
+<p>Note: SiriKit and iOS 10 are still in Beta. At this time, the <code>unsupported</code> method as well as other non-success methods such as <code>confirmationRequired</code> and <code>disambiguation</code> do not initiate the correct response from Siri.</p>
+</blockquote>
+
+<p>We&#39;ve now resolved all the inputs and we&#39;re also sure they&#39;re valid. It&#39;s time to confirm that the payment will work. Here we can also adjust the values. If the user requests Siri to send &quot;100 dollars&quot; to someone, we may convert the dollar amount to Bitcoin. Additionally, we could factor in the latest exchange rates and lock those in as well as account for any transaction fees if necessary. This step can be treated like a dry run of the request to ensure that it would be properly handled.</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">confirm</span><span class="p">(</span><span class="n">sendPayment</span> <span class="nv">intent</span><span class="p">:</span> <span class="kt">INSendPaymentIntent</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">INSendPaymentIntentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// TODO: Convert price to bitcoin so the user sees exactly how much will be removed</span>
+    <span class="k">let</span> <span class="nv">resolutionResult</span> <span class="o">=</span> <span class="kt">INSendPaymentIntentResponse</span><span class="p">(</span><span class="nv">code</span><span class="p">:</span> <span class="o">.</span><span class="n">success</span><span class="p">)</span>
+    <span class="nf">completion</span><span class="p">(</span><span class="n">resolutionResult</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Once the user confirms the payment, we just need to follow through with the request by actually handling it. This would probably take the form of an API call in this example. There could also be the case where you require your users to authenticate in the application. In that case, rather than returning a response code of <code>.success</code>, you could instead call the completion with the <code>.failureRequiringAppLaunch
+</code> response code which would then open up your application and you could finish the flow in that way.</p>
+
+<h2 id="show-me-the-money">Show Me the Money!</h2>
+
+<p>Requesting money with Bitcoin is a more complicated process. We could initiate a request that sends an e-mail or a text message. We could initiate a request on our server for which that other user could log in and accept or reject our request. However if the other party is in the same room, it can be easier to simply generate a payment request which includes your wallet address, the amount, and a message if necessary. This can then be displayed as a QR code for the payee to scan and send payment to, regardless of whether or not they are registered with our server. Fear not, friends. It&#39;s easier than you think.</p>
+
+<p>Start off adding <code>INRequestPaymentIntent</code> to the <code>IntentsSupported</code> array in the <code>Info.plist</code>. Then, implement the <a href="https://developer.apple.com/reference/intents/inrequestpaymentintenthandling">INRequestPaymentIntentHandling</a> protocol. Implementing this happens much the same way we implemented the protocol to support sending a payment. Resolve all of the intent parameters and confirm the intent request. How do we handle the request? If we have a payer (recipient of the payment request), we can send the request through our server. If no recipient is specified, we will always succeed because the QR code is displayed on the screen.</p>
+
+<p>Our logic for handling the intent is done. Now we just need to present the QR code. If you didn&#39;t check the box to include an Intent UI Extension, now is a great time to add that new target to you application. The first thing to do is add the <code>INRequestPaymentIntent</code> key to the <code>IntentsSupported</code> array in the <code>Info.plist</code> for the UI extension.</p>
+
+<p>The UI extension is a simple view controller with a storyboard in which you can setup your interface. Simply pull the parameters from that intent in order to generate the interface you wish to display. This is done in the configure method.</p>
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">guard</span> <span class="k">let</span> <span class="nv">intent</span> <span class="o">=</span> <span class="n">interaction</span><span class="o">.</span><span class="n">intent</span> <span class="k">as?</span> <span class="kt">INRequestPaymentIntent</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nf">completion</span><span class="p">(</span><span class="o">.</span><span class="n">zero</span><span class="p">)</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// Parse parameters</span>
+<span class="k">var</span> <span class="nv">params</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]()</span>
+<span class="k">if</span> <span class="k">let</span> <span class="nv">note</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="n">note</span> <span class="p">{</span>
+    <span class="n">params</span><span class="p">[</span><span class="s">"message"</span><span class="p">]</span> <span class="o">=</span> <span class="n">note</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="k">let</span> <span class="nv">amount</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="n">currencyAmount</span><span class="p">?</span><span class="o">.</span><span class="nf">getBitcoinAmount</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">params</span><span class="p">[</span><span class="s">"amount"</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">description</span>
+<span class="p">}</span>
+
+<span class="c1">// Generate QR code from the intent request parameters</span>
+
+<span class="c1">// Update our view</span>
+<span class="n">imageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">qrcodeImage</span>
+
+<span class="c1">// Call the completion</span>
+<span class="nf">completion</span><span class="p">(</span><span class="n">desiredSize</span><span class="p">)</span>
+</code></pre></div>
+<p>And that&#39;s it! The <code>Info.plist</code> links up the intent extension with the intent UI extension for you and displays it. You&#39;re free to add whatever you wish to your view and animate it if you so choose. If we don’t want to show any custom UI if we handle the case by sending a server request, we can call the completion with a zero size.</p>
+
+<p>It is important to note that the UI extension is totally non-interactive so you are unable to enter a pin number or adjust a slider value within your UI extension. In order to accomplish this user experience, you will have to adjust your handle method in the Siri extension to return a success status of <code>.failureRequiringAppLaunch</code>. Then, your application will continue the flow of the user request.</p>
+
+<h2 id="i-m-sorry-dave-i-m-afraid-i-can-t-do-that">I’m Sorry, Dave, I’m afraid I can’t do that.</h2>
+
+<p>While it is really exciting to see Apple open up access to functionality such as Siri, it still is rather restrictive. Currently the domains are restricted to messaging, voip calling, ride booking, payments, workouts, photo search, and CarPlay. While this is certainly disappointing, it makes sense from Apple’s perspective. This model allows Siri to be fast and places abounds on the amount of ambiguity it is required to handle. Additionally, it makes for a really simple developer experience that mimics a real conversation.</p>
+
+<p>But I <em>really</em> wanted to order a pizza with Siri. Unfortunately, it&#39;s just not possible... or is it? No. Not right now. But there are alternatives. The easy and hacky alternative is to pigeonhole your Siri interactions into one of the existing domains. Sending a payment with a note <em>could</em> work, but it doesn&#39;t make a lot of sense and does not provide a good user experience.</p>
+
+<p>Luckily, iOS 10 also introduced the <a href="https://developer.apple.com/reference/speech">Speech</a> framework which allows you to easily recognize speech and convert that audio to text. You could then take the parsed text and run it through Apple&#39;s <a href="https://developer.apple.com/library/ios/documentation/Cocoa/Reference/NSLinguisticTagger_Class/">NSLinguisticTagger</a> to get relavant tags and parts of speech. This gives you way more control over the ability to parse the user input but requires much more work to capture the intent of the user’s words. This is made far more confusing when localization and internationalization are taken into consideration. It is also possible to employ 3rd party libraries such as Nuance&#39;s <a href="https://developer.nuance.com/">SpeechKit 2</a> framework which may fit your needs better than SiriKit.</p>
+
+<h2 id="i-39-m-sorry-i-didn-39-t-get-that">I&#39;m sorry, I didn&#39;t get that.</h2>
+
+<p>SiriKit is still in beta and it shows. With iOS 10 not launching until late 2016, there&#39;s still plenty of time to fix issues. While it is exciting that Apple is opening up their platform, it remains confined to the way Apple wants these interactions to occur. Not only are they restricting which domains from which you can integrate your app with Siri, but they are also restricting some of the interactions. For example, you can define custom vocabulary for workouts in your application, but you are unable to define custom vocabulary for payment types or currencies. This restriction denies developers from sending in-app currencies such as coins. Developers are also unable to respond with errors that are more descriptive. The error message received by the user when they don’t have enough funds is incredibly vague.</p>
+
+<p>These restrictions are not made without reason. Doing so lets Apple to open up Siri while still allowing users to interact without being forced to learn new interactions for each application. The opening up of this and other core functionality is quite welcome enabling a richer experience for users that extends beyond just the installed app. Perhaps one day in the not too distant future Siri will understand our great desire for pizza and know what to do in that situation.</p>
+
+<p>The full demo project is available <a href="https://github.com/kwongius/SiriKitExample">here</a>.</p>
+
+  </article>
+
+</div>
+
+    </div>
+</div>
+
+<hr style="margin:0px;">
+    <footer><div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <span class="copyright">Copyright &copy; Pixio 2016</span>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-3">
+      <ul class="list-inline social-buttons">
+        
+        <li><a href="https://github.com/pixio"><i class="fa fa-github"></i></a></li>
+        
+        <li><a href="https://www.facebook.com/pixioOne"><i class="fa fa-facebook"></i></a></li>
+        
+        <li><a href="https://twitter.com/pixiotech"><i class="fa fa-twitter"></i></a></li>
+        
+        <li><a href="https://www.linkedin.com/company/pixio-llc"><i class="fa fa-linkedin"></i></a></li>
+        
+        <li><a href="http://instagram.com/pixiollc"><i class="fa fa-instagram"></i></a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+</div>
+</footer>
+
+    <!-- jQuery Version 1.11.0 -->
+<script src="/js/jquery-1.11.0.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="/js/jquery.easing.min.js"></script>
+<script src="/js/classie.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="/js/jqBootstrapValidation.js"></script>
+<script src="/js/contact_me.js"></script>
+<script src="/js/verify.notify.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/agency.js"></script>
+
+<!-- Custom -->
+
+<!-- Google Analytics -->
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-40963718-1', 'auto');
+    ga('send', 'pageview');
+        </script>
+
+
+</body>
+
+</html>
